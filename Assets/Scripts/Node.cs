@@ -48,7 +48,6 @@ public class RootNode : BaseNode
     }
 }
 
-
 public class Option
 {
     public string text;
