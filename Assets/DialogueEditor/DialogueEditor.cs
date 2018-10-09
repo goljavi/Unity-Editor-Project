@@ -116,7 +116,7 @@ namespace SA.DialogueEditor
             GenericMenu menu = new GenericMenu();
             menu.AddSeparator("");
             menu.AddItem(new GUIContent("Add Question"), false, ContextCallback, UserActions.addQuestion);
-            menu.AddItem(new GUIContent("Add Answer"), false, ContextCallback, UserActions.addAnswer);
+            menu.AddItem(new GUIContent("Add Starting Node"), false, ContextCallback, UserActions.addAnswer);
 
             menu.ShowAsContext();
             e.Use();
@@ -134,7 +134,7 @@ namespace SA.DialogueEditor
                 menu.AddItem(new GUIContent("Delete"), false, ContextCallback, UserActions.deleteNode);
             }
 
-            if (selectedNode is AnswerNode)
+            if (selectedNode is StartNode)
             {
                 menu.AddSeparator("");
                 menu.AddItem(new GUIContent("Add Transition"), false, ContextCallback, UserActions.addTransitionNode);
@@ -154,7 +154,7 @@ namespace SA.DialogueEditor
                 case UserActions.addQuestion:
                     QuestionNode questionNode = QuestionNode.CreateInstance<QuestionNode>();
                     {
-                        questionNode.windowRect = new Rect(mousePosition.x, mousePosition.y, 200, 300);
+                        questionNode.windowRect = new Rect(mousePosition.x, mousePosition.y, 400, 200);
                         questionNode.windowTitle = "Question";
                     }
 
@@ -162,13 +162,13 @@ namespace SA.DialogueEditor
 
                     break;
                 case UserActions.addAnswer:
-                    AnswerNode answerNode = AnswerNode.CreateInstance<AnswerNode>();
+                    StartNode startingNode = StartNode.CreateInstance<StartNode>();
                     {
-                        answerNode.windowRect = new Rect(mousePosition.x, mousePosition.y, 200, 300);
-                        answerNode.windowTitle = "Answer";
+                        startingNode.windowRect = new Rect(mousePosition.x, mousePosition.y, 100, 100);
+                        startingNode.windowTitle = "Starting Node";
                     }
 
-                    windows.Add(answerNode);
+                    windows.Add(startingNode);
 
                     break;
                 case UserActions.addTransitionNode:
