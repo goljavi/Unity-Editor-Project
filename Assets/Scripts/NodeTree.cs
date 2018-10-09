@@ -15,7 +15,10 @@ public class NodeTree : MonoBehaviour {
 	}
 
 	public void SelectOption(int value) {
-
+		if(_currentNode != null && _currentNode.options[value] != null)
+		{
+			_currentNode = _currentNode.options[value].linkedNode;
+		}
 	}
 
 	public void Initialize(Node startingNode = null) {
