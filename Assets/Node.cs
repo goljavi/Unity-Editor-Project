@@ -57,7 +57,7 @@ public class Option
     public Option()
     {
         text = "";
-        linkedNode = null;
+        linkedNode = new Node("new node");
     }
 
     public void SetLink(Node newLink)
