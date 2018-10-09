@@ -28,7 +28,7 @@ public class NodeTree : MonoBehaviour {
 			_currentNode = startingNode;
 		} else
 		{
-			_currentNode = new Node("");
+			_currentNode = new RootNode().start;
 		}
 		_initialized = true;
 	}

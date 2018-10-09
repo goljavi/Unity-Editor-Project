@@ -37,6 +37,10 @@ public class RootNode : BaseNode
 {
     public Node start;
 
+	public RootNode() {
+		SetStart(new Node(""));
+	}
+
     public RootNode(Node startingNode)
     {
         SetStart(startingNode);
