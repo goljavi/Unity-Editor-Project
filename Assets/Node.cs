@@ -4,24 +4,38 @@ using UnityEngine;
 
 public class Node {
 
-    public string textContent;
+    public string text;
     public Node parent;
-    public List<Node> children;
+    public List<NodeOption> options;
+
 
     public Node(string newTextContent, Node newParent) //Crear nodo hijo o comun
     {
-        textContent = newTextContent;
+        text = newTextContent;
         parent = newParent;
     }
 
     public Node(string newTextContent) // Crear nodo raiz o inicial
     {
-        textContent = newTextContent;
+        text = newTextContent;
     }
 
-    public void CreateChild(string newTextContent)
+    public void AddOption()
     {
-        Node child = new Node(newTextContent, this);
+        var newOption = new NodeOption();
+        options.Add(newOption);
     }
 
+}
+
+public class NodeOption
+{
+    public string text;
+    public Node linkedNode;
+
+    public NodeOption()
+    {
+        text = "";
+        linkedNode = null;
+    }
 }
