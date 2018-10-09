@@ -2,12 +2,20 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Node {
+public abstract class BaseNode
+{
+}
 
+public class Node : BaseNode
+{
     public string text;
     public Node parent;
-    public List<NodeOption> options;
+    public List<Option> options = new List<Option>();
 
+    public Node(string newTextContent) // Crear nodo raiz o inicial
+    {
+        text = newTextContent;
+    }
 
     public Node(string newTextContent, Node newParent) //Crear nodo hijo o comun
     {
@@ -15,27 +23,45 @@ public class Node {
         parent = newParent;
     }
 
-    public Node(string newTextContent) // Crear nodo raiz o inicial
-    {
-        text = newTextContent;
-    }
 
-    public void AddOption()
+
+    public void AddOption(string optionText = "")
     {
-        var newOption = new NodeOption();
+        var newOption = new Option();
+        newOption.text = optionText;
         options.Add(newOption);
     }
-
 }
 
-public class NodeOption
+public class RootNode : BaseNode
+{
+    public Node start;
+
+    public RootNode(Node startingNode)
+    {
+        SetStart(startingNode);
+    }
+
+    public void SetStart(Node startingNode)
+    {
+        start = startingNode;
+    }
+}
+
+
+public class Option
 {
     public string text;
     public Node linkedNode;
 
-    public NodeOption()
+    public Option()
     {
         text = "";
         linkedNode = null;
+    }
+
+    public void SetLink(Node newLink)
+    {
+        linkedNode = newLink;
     }
 }
