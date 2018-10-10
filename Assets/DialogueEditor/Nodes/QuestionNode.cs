@@ -9,7 +9,7 @@ namespace SA.DialogueEditor
     public class QuestionNode : BaseNode
     {
 
-        /*public string text = "";
+        public string text = "";
         public List<string> replies = new List<string>();
         private Vector2 textAreaSize = new Vector2(0, 0);
 
@@ -18,42 +18,40 @@ namespace SA.DialogueEditor
             windowRect = new Rect(0,0,300,100);
             nodeName = "Chat";
         }
-        */
+        
         public override void DrawWindow()
         {
-           /* base.DrawWindow();
+            base.DrawWindow();
             GUIStyle style = GUI.skin.box;
             style.alignment = TextAnchor.MiddleCenter;
 
             GUIContent content = new GUIContent(text);
             textAreaSize = style.CalcSize(content);
 
-            text = GUI.TextArea(new Rect(5, offsetHeight, windowRect.width - 10, textAreaSize.y), text);
-            addedWindowHeight = textAreaSize.y;
+            EditorGUILayout.BeginHorizontal();
+            text = EditorGUILayout.TextField(text);
 
-            offsetHeight += addedWindowHeight + 10;
+            if (GUILayout.Button("Crear!"))
+            {
+                replies.Add("");
+            }
+            EditorGUILayout.EndHorizontal();
 
             for (int i = 0; i < replies.Count; i++)
             {
-                if (GUI.Button(new Rect(5, offsetHeight, 20, textHeight), "-"))
+                EditorGUILayout.BeginHorizontal();
+                if (GUILayout.Button("-"))
                 {
                     replies.RemoveAt(i);
                     break;
                 }
 
-                replies[i] = GUI.TextField(new Rect(30, offsetHeight, windowRect.width - 35, textHeight), replies[i]);
-                offsetHeight += textHeight;
-                addedWindowHeight += textHeight;
-            }
-            offsetHeight += 10;
-
-            if (GUI.Button(new Rect(windowRect.width -90, offsetHeight, 80, textHeight), "Add Reply"))
-            {
-                replies.Add("");
+                replies[i] = EditorGUILayout.TextField(replies[i]);
+                EditorGUILayout.EndHorizontal();
             }
 
-            windowRect.height = startingWindowHeight + addedWindowHeight;
-            */
+            
+            
         }
         
         public override void DrawCurve()
