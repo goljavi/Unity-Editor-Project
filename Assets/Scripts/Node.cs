@@ -9,28 +9,34 @@ public abstract class BaseNode
 public class Node : BaseNode
 {
     public string text;
-    public Node parent;
+    public Option parent;
     public List<Option> options = new List<Option>();
+	private int nodeID;
+	private static uint nodeCount = 0;
 
     public Node(string newTextContent) // Crear nodo raiz o inicial
     {
         text = newTextContent;
     }
 
-    public Node(string newTextContent, Node newParent) //Crear nodo hijo o comun
+    public Node(string newTextContent, Option newParent) //Crear nodo hijo o comun
     {
         text = newTextContent;
         parent = newParent;
     }
 
 
-
     public void AddOption(string optionText = "")
     {
-        var newOption = new Option();
-        newOption.text = optionText;
+        var newOption = new Option(this);
+        newOption.Text = optionText;
         options.Add(newOption);
     }
+
+	public void ChangeParent(Option newParentOption) {
+		parent = newParentOption;
+		newParentOption.ChildNode = this;
+	}
 }
 
 public class RootNode : BaseNode
@@ -54,17 +60,38 @@ public class RootNode : BaseNode
 
 public class Option
 {
-    public string text;
-    public Node linkedNode;
+	private string text;
+	private Node childNode;
+	private readonly Node container;
 
-    public Option()
+    public Option(Node container)
     {
         text = "";
-        linkedNode = new Node("new node");
+        childNode = new Node("New node");
+		this.container = container;
     }
 
-    public void SetLink(Node newLink)
+    public Node ChildNode
     {
-        linkedNode = newLink;
+		set
+		{
+			childNode.parent = null;
+			childNode = value;
+		}
+		get
+		{
+			return childNode;
+		}
     }
+
+	public string Text {
+		get
+		{
+			return text;
+		}
+		set
+		{
+			text = value;
+		}
+	}
 }

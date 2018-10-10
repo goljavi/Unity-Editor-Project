@@ -14,13 +14,6 @@ public class NodeTree : MonoBehaviour {
 
 	}
 
-	public void SelectOption(int value) {
-		if(_currentNode != null && _currentNode.options[value] != null)
-		{
-			_currentNode = _currentNode.options[value].linkedNode;
-		}
-	}
-
 	public void Initialize(Node startingNode = null) {
 		if (_initialized) return;
 		if (startingNode != null)
@@ -33,5 +26,30 @@ public class NodeTree : MonoBehaviour {
 		_initialized = true;
 	}
 
+	public void SelectOption(Option option) {
+		if(_currentNode != null && _currentNode.options != null)
+		{
+			if (_currentNode.options.Contains(option))
+			{
+				_currentNode = option.ChildNode;
+				return;
+			} 
+			Debug.LogError("Selected option is not inside the current node");
+		}
+	}
+
+	public string NodeText {
+		get
+		{
+			return _currentNode.text;
+		}
+	}
+
+	public List<Option> NodeResponces {
+		get
+		{
+			return new List<Option>(_currentNode.options);
+		}
+	}
 
 }
