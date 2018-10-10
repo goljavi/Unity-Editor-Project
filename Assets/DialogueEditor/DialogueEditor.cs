@@ -17,7 +17,7 @@ namespace SA.DialogueEditor
         public enum UserActions
         {
             addQuestion,
-            addAnswer,
+            addStartingNode,
             addTransitionNode,
             deleteNode
         }
@@ -53,7 +53,7 @@ namespace SA.DialogueEditor
 
             for (int i = 0; i < windows.Count; i++)
             {
-                windows[i].windowRect = GUI.Window(i, windows[i].windowRect, DrawNodeWindow, windows[i].windowTitle);
+                windows[i].windowRect = GUI.Window(i, windows[i].windowRect, DrawNodeWindow, windows[i].nodeName);
             }
 
             EndWindows();
@@ -116,7 +116,7 @@ namespace SA.DialogueEditor
             GenericMenu menu = new GenericMenu();
             menu.AddSeparator("");
             menu.AddItem(new GUIContent("Add Question"), false, ContextCallback, UserActions.addQuestion);
-            menu.AddItem(new GUIContent("Add Starting Node"), false, ContextCallback, UserActions.addAnswer);
+            menu.AddItem(new GUIContent("Add Starting Node"), false, ContextCallback, UserActions.addStartingNode);
 
             menu.ShowAsContext();
             e.Use();
@@ -155,17 +155,17 @@ namespace SA.DialogueEditor
                     QuestionNode questionNode = QuestionNode.CreateInstance<QuestionNode>();
                     {
                         questionNode.windowRect = new Rect(mousePosition.x, mousePosition.y, 400, 200);
-                        questionNode.windowTitle = "Question";
+                        questionNode.nodeName = "Question";
                     }
 
                     windows.Add(questionNode);
 
                     break;
-                case UserActions.addAnswer:
+                case UserActions.addStartingNode:
                     StartNode startingNode = StartNode.CreateInstance<StartNode>();
                     {
                         startingNode.windowRect = new Rect(mousePosition.x, mousePosition.y, 100, 100);
-                        startingNode.windowTitle = "Starting Node";
+                        startingNode.nodeName = "Starting Node";
                     }
 
                     windows.Add(startingNode);
