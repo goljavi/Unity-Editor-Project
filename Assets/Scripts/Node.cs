@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class BaseNode
+public abstract class BaseClientNode
 {
 }
 
-public class Node : BaseNode
+public class Node : BaseClientNode
 {
     public string text;
     public Option parent;
@@ -39,7 +39,7 @@ public class Node : BaseNode
 	}
 }
 
-public class RootNode : BaseNode
+public class RootNode : BaseClientNode
 {
     public Node start;
 

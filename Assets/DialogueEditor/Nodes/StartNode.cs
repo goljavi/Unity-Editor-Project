@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace SA.DialogueEditor
 {
-    public class StartNode : BaseNode
+    public class StartNode : BaseEditorNode
     {
 
         public override void DrawWindow()

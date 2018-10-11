@@ -8,11 +8,11 @@ namespace SA.DialogueEditor
 
     public class DialogueEditor : EditorWindow
     {
-        static List<BaseNode> windows = new List<BaseNode>();
+        static List<BaseEditorNode> windows = new List<BaseEditorNode>();
         Vector3 mousePosition;
         bool makeTransition;
         bool clickOnWindow;
-        BaseNode selectedNode;
+        BaseEditorNode selectedNode;
 
         public enum UserActions
         {
@@ -40,13 +40,21 @@ namespace SA.DialogueEditor
 
         private void OnEnable()
         {
-            //windows.Clear();
+            StartNode startingNode = StartNode.CreateInstance<StartNode>();
+            {
+                startingNode.windowRect = new Rect(0, 0, 100, 100);
+                startingNode.nodeName = "Starting Node";
+            }
+
+            windows.Add(startingNode);
+
+            
         }
 
         void DrawWindows()
         {
             BeginWindows();
-            foreach (BaseNode n in windows)
+            foreach (BaseEditorNode n in windows)
             {
                 n.DrawCurve();
             }
@@ -97,30 +105,15 @@ namespace SA.DialogueEditor
                 }
             }
 
-            if (!clickOnWindow)
-            {
-                AddNewNode(e);
-            }
-
-            else
-            {
+            if (clickOnWindow)
                 ModifyNode(e);
-            }
+
 
             clickOnWindow = false;
         }
 
 
-        void AddNewNode(Event e)
-        {
-            GenericMenu menu = new GenericMenu();
-            menu.AddSeparator("");
-            menu.AddItem(new GUIContent("Add Question"), false, ContextCallback, UserActions.addQuestion);
-            menu.AddItem(new GUIContent("Add Starting Node"), false, ContextCallback, UserActions.addStartingNode);
 
-            menu.ShowAsContext();
-            e.Use();
-        }
 
         void ModifyNode(Event e)
         {
@@ -129,24 +122,20 @@ namespace SA.DialogueEditor
             if (selectedNode is QuestionNode)
             {
                 menu.AddSeparator("");
-                menu.AddItem(new GUIContent("Add Transition"), false, ContextCallback, UserActions.addTransitionNode);
-                menu.AddSeparator("");
                 menu.AddItem(new GUIContent("Delete"), false, ContextCallback, UserActions.deleteNode);
             }
 
             if (selectedNode is StartNode)
             {
                 menu.AddSeparator("");
-                menu.AddItem(new GUIContent("Add Transition"), false, ContextCallback, UserActions.addTransitionNode);
-                menu.AddSeparator("");
-                menu.AddItem(new GUIContent("Delete"), false, ContextCallback, UserActions.deleteNode);
+                menu.AddItem(new GUIContent("Add Question"), false, ContextCallback, UserActions.addQuestion);
             }
 
             menu.ShowAsContext();
             e.Use();
         }
 
-        void ContextCallback(object o)
+        public void ContextCallback(object o)
         {
             UserActions a = (UserActions)o;
             switch (a)
@@ -161,28 +150,16 @@ namespace SA.DialogueEditor
                     windows.Add(questionNode);
 
                     break;
-                case UserActions.addStartingNode:
-                    StartNode startingNode = StartNode.CreateInstance<StartNode>();
-                    {
-                        startingNode.windowRect = new Rect(mousePosition.x, mousePosition.y, 100, 100);
-                        startingNode.nodeName = "Starting Node";
-                    }
-
-                    windows.Add(startingNode);
-
-                    break;
-                case UserActions.addTransitionNode:
-                    break;
                 case UserActions.deleteNode:
                     if (selectedNode != null)
                     {
                         windows.Remove(selectedNode);
                     }
                     break;
-                default:
-                    break;
             }
         }
+
+        
 
         void LeftClick(Event e)
         {

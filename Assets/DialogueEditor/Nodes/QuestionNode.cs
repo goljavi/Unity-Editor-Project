@@ -6,7 +6,7 @@ using SA;
 
 namespace SA.DialogueEditor
 {
-    public class QuestionNode : BaseNode
+    public class QuestionNode : BaseEditorNode
     {
 
         public string text = "";
