@@ -144,10 +144,8 @@ namespace SA.DialogueEditor
             {
                 case UserActions.addQuestion:
 
-					Node newNode = new Node("");
-					newNode.ChangeParent(selectedNode.node.AddOption("", newNode));
 					QuestionNode questionNode = QuestionNode.CreateInstance<QuestionNode>();
-					questionNode.node = newNode;
+					questionNode.node.ChangeParent(selectedNode.node.AddOption("", questionNode.node));
                     questionNode.windowRect = new Rect(mousePosition.x, mousePosition.y, 400, 200);
                     questionNode.nodeName = "Question";
                     nodes.Add(questionNode);

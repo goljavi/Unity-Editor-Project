@@ -70,6 +70,7 @@ public class RootNode : BaseNode {
 		var newOption = new Option(this);
 		newOption.Text = optionText;
 		newOption.ChildNode = attachedNode;
+		rootOption = newOption;
 		return newOption;
 	}
 }

@@ -7,7 +7,7 @@ using SA;
 
 public class QuestionNode : BaseEditorNode {
 	private Vector2 textAreaSize = new Vector2(0, 0);
-	new private Node node;
+	new public Node node;
 
 	public QuestionNode() {
 		windowRect = new Rect(0, 0, 300, 100);
