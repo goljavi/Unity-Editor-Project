@@ -8,6 +8,7 @@ public class NodeTree : MonoBehaviour {
 
 	private Node _currentNode;
 	private bool _initialized = false;
+	//public NodeTreeFileContainerType data;
 
 	// Update is called once per frame
 	void Update() {

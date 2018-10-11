@@ -8,11 +8,11 @@ namespace SA.DialogueEditor
 
     public class DialogueEditor : EditorWindow
     {
-        static List<BaseEditorNode> nodes = new List<BaseEditorNode>();
-        Vector3 mousePosition;
-        bool makeTransition;
-        bool clickOnWindow;
-        BaseEditorNode selectedNode;
+        private static List<BaseEditorNode> nodes = new List<BaseEditorNode>();
+        private Vector3 mousePosition;
+        private bool makeTransition;
+        private bool clickOnWindow;
+        private BaseEditorNode selectedNode;
 
         public enum UserActions
         {
@@ -143,13 +143,15 @@ namespace SA.DialogueEditor
             switch (a)
             {
                 case UserActions.addQuestion:
-                    QuestionNode questionNode = QuestionNode.CreateInstance<QuestionNode>();
-                    {
-                        questionNode.windowRect = new Rect(mousePosition.x, mousePosition.y, 400, 200);
-                        questionNode.nodeName = "Question";
-                    }
 
+					Node newNode = new Node("");
+					newNode.ChangeParent(selectedNode.node.AddOption("", newNode));
+					QuestionNode questionNode = QuestionNode.CreateInstance<QuestionNode>();
+					questionNode.node = newNode;
+                    questionNode.windowRect = new Rect(mousePosition.x, mousePosition.y, 400, 200);
+                    questionNode.nodeName = "Question";
                     nodes.Add(questionNode);
+
 
                     break;
                 case UserActions.deleteNode:

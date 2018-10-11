@@ -2,21 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace SA.DialogueEditor
-{
-    public class StartNode : BaseEditorNode
-    {
 
-        public override void DrawWindow()
-        {
+public class StartNode : BaseEditorNode {
+	new private RootNode node;
 
-        }
+	public StartNode() {
+		node = new RootNode();
+	}
 
-        public override void DrawCurve()
-        {
+	public override void DrawWindow() {
 
-        }
+	}
 
-    }
+	public override void DrawCurve() {
+
+	}
 
 }
+
+

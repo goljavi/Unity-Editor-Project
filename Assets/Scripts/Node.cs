@@ -2,41 +2,45 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class BaseClientNode
-{
+public abstract class BaseNode {
+
+	public string title;
+	public readonly uint nodeID;
+	protected static uint nodeCount = 0;
+
+	public BaseNode() {
+		nodeID = BaseNode.nodeCount;
+		nodeCount++;
+	}
+
+	public abstract Option AddOption(string optionText, Node attatchedNode);
 }
 
-public class Node : BaseClientNode
-{
-    public string text;
-    public Option parent;
-    public List<Option> options = new List<Option>();
-	private readonly uint nodeID;
-	private static uint nodeCount = 0;
+public class Node : BaseNode {
 
-    public Node(string newTextContent) // Crear nodo raiz o inicial
-    {
-        text = newTextContent;
-		nodeID = nodeCount;
-		nodeCount++;
-    }
+	public string text;
+	public Option parent;
+	public List<Option> options = new List<Option>();
 
-    public Node(string newTextContent, Option newParent) //Crear nodo hijo o comun
-    {
-        text = newTextContent;
-        parent = newParent;
-		nodeID = nodeCount;
-		nodeCount++;
-    }
+	public Node(string newTextContent) // Crear nodo raiz o inicial
+	{
+		text = newTextContent == "" ? nodeID.ToString() : newTextContent;
+	}
 
+	public Node(string newTextContent, Option newParent) //Crear nodo hijo o comun
+	{
+		text = newTextContent == "" ? nodeID.ToString() : newTextContent;
+		parent = newParent;
+	}
 
-
-    public void AddOption(string optionText = "")
-    {
-        var newOption = new Option(this);
-        newOption.Text = optionText;
-        options.Add(newOption);
-    }
+	public override Option AddOption(string optionText, Node attachedNode = null) {
+		var newOption = new Option(this);
+		newOption.Text = optionText;
+		options.Add(newOption);
+		if (attachedNode!=null)
+			newOption.ChildNode = attachedNode;
+		return newOption;
+	}
 
 	public void ChangeParent(Option newParentOption) {
 		parent = newParentOption;
@@ -44,40 +48,44 @@ public class Node : BaseClientNode
 	}
 }
 
-public class RootNode : BaseClientNode
-{
-    public Node start;
+public class RootNode : BaseNode {
+	public Node start;
+	public Option rootOption;
 
 	public RootNode() {
-		SetStart(new Node(""));
+		//SetStart(new Node(""));
+		rootOption = new Option(this);
+		title = "Root";
 	}
 
-    public RootNode(Node startingNode)
-    {
-        SetStart(startingNode);
-    }
+	public RootNode(Node startingNode) {
+		SetStart(startingNode);
+	}
 
-    public void SetStart(Node startingNode)
-    {
-        start = startingNode;
-    }
+	public void SetStart(Node startingNode) {
+		start = startingNode;
+	}
+
+	public override Option AddOption(string optionText, Node attachedNode) {
+		var newOption = new Option(this);
+		newOption.Text = optionText;
+		newOption.ChildNode = attachedNode;
+		return newOption;
+	}
 }
 
-public class Option
-{
+public class Option {
 	private string text;
 	private Node childNode;
-	public readonly Node container;
+	public readonly BaseNode container;
 
-    public Option(Node container)
-    {
-        text = "";
-        childNode = new Node("New node");
+	public Option(BaseNode container) {
+		text = "";
+		childNode = new Node("New node");
 		this.container = container;
-    }
+	}
 
-    public Node ChildNode
-    {
+	public Node ChildNode {
 		set
 		{
 			childNode.parent = null;
@@ -87,7 +95,7 @@ public class Option
 		{
 			return childNode;
 		}
-    }
+	}
 
 	public string Text {
 		get

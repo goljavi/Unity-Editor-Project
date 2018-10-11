@@ -4,60 +4,52 @@ using UnityEngine;
 using UnityEditor;
 using SA;
 
-namespace SA.DialogueEditor
-{
-    public class QuestionNode : BaseEditorNode
-    {
 
-        public string text = "";
-        public List<string> replies = new List<string>();
-        private Vector2 textAreaSize = new Vector2(0, 0);
+public class QuestionNode : BaseEditorNode {
+	private Vector2 textAreaSize = new Vector2(0, 0);
+	new private Node node;
 
-        public QuestionNode()
-        {
-            windowRect = new Rect(0,0,300,100);
-            nodeName = "Chat";
-        }
-        
-        public override void DrawWindow()
-        {
-            base.DrawWindow();
-            GUIStyle style = GUI.skin.box;
-            style.alignment = TextAnchor.MiddleCenter;
+	public QuestionNode() {
+		windowRect = new Rect(0, 0, 300, 100);
+		nodeName = "Chat";
+		this.node = node;
+	}
 
-            GUIContent content = new GUIContent(text);
-            textAreaSize = style.CalcSize(content);
+	public override void DrawWindow() {
+		base.DrawWindow();
+		GUIStyle style = GUI.skin.box;
+		style.alignment = TextAnchor.MiddleCenter;
 
-            EditorGUILayout.BeginHorizontal();
-            text = EditorGUILayout.TextField(text);
+		GUIContent content = new GUIContent(node.text);
+		textAreaSize = style.CalcSize(content);
 
-            if (GUILayout.Button("Crear!"))
-            {
-                replies.Add("");
-            }
-            EditorGUILayout.EndHorizontal();
+		EditorGUILayout.BeginHorizontal();
+		node.text = EditorGUILayout.TextField(node.text);
 
-            for (int i = 0; i < replies.Count; i++)
-            {
-                EditorGUILayout.BeginHorizontal();
-                if (GUILayout.Button("-"))
-                {
-                    replies.RemoveAt(i);
-                    break;
-                }
+		if (GUILayout.Button("Crear!"))
+		{
+			node.AddOption("");
+		}
+		EditorGUILayout.EndHorizontal();
 
-                replies[i] = EditorGUILayout.TextField(replies[i]);
-                EditorGUILayout.EndHorizontal();
-            }
+		for (int i = 0; i < node.options.Count; i++)
+		{
+			EditorGUILayout.BeginHorizontal();
+			if (GUILayout.Button("-"))
+			{
+				node.options.RemoveAt(i);
+				break;
+			}
 
-            
-            
-        }
-        
-        public override void DrawCurve()
-        {
+			node.options[i].Text = EditorGUILayout.TextField(node.options[i].Text);
+			EditorGUILayout.EndHorizontal();
+		}
 
-        }
-    }
+
+
+	}
+
+	public override void DrawCurve() {
+
+	}
 }
-

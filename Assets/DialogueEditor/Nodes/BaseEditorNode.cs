@@ -12,7 +12,7 @@ public abstract class BaseEditorNode : ScriptableObject
     public float textHeight = 19;
     public float startingWindowHeight = 100;
     public float addedWindowHeight = 0;
-    public BaseClientNode node;
+    public BaseNode node;
 
     void OnEnable()
     {
