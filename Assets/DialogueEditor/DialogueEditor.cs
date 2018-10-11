@@ -8,7 +8,7 @@ namespace SA.DialogueEditor
 
     public class DialogueEditor : EditorWindow
     {
-        static List<BaseEditorNode> windows = new List<BaseEditorNode>();
+        static List<BaseEditorNode> nodes = new List<BaseEditorNode>();
         Vector3 mousePosition;
         bool makeTransition;
         bool clickOnWindow;
@@ -29,6 +29,21 @@ namespace SA.DialogueEditor
             editor.minSize = new Vector2(400, 200);
         }
 
+        void Awake()
+        {
+            StartNode startingNode = StartNode.CreateInstance<StartNode>();
+            {
+                startingNode.windowRect = new Rect(0, 0, 100, 100);
+                startingNode.nodeName = "Starting Node";
+            }
+
+            nodes.Add(startingNode);
+        }
+
+        void OnDestroy()
+        {
+            nodes.Clear();
+        }
 
         private void OnGUI()
         {
@@ -38,30 +53,17 @@ namespace SA.DialogueEditor
             DrawWindows();
         }
 
-        private void OnEnable()
-        {
-            StartNode startingNode = StartNode.CreateInstance<StartNode>();
-            {
-                startingNode.windowRect = new Rect(0, 0, 100, 100);
-                startingNode.nodeName = "Starting Node";
-            }
-
-            windows.Add(startingNode);
-
-            
-        }
-
         void DrawWindows()
         {
             BeginWindows();
-            foreach (BaseEditorNode n in windows)
+            foreach (BaseEditorNode n in nodes)
             {
                 n.DrawCurve();
             }
 
-            for (int i = 0; i < windows.Count; i++)
+            for (int i = 0; i < nodes.Count; i++)
             {
-                windows[i].windowRect = GUI.Window(i, windows[i].windowRect, DrawNodeWindow, windows[i].nodeName);
+                nodes[i].windowRect = GUI.Window(i, nodes[i].windowRect, DrawNodeWindow, nodes[i].nodeName);
             }
 
             EndWindows();
@@ -69,7 +71,7 @@ namespace SA.DialogueEditor
 
         void DrawNodeWindow(int id)
         {
-            windows[id].DrawWindow();
+            nodes[id].DrawWindow();
             GUI.DragWindow();
         }
 
@@ -95,12 +97,12 @@ namespace SA.DialogueEditor
         void RightClick(Event e)
         {
             selectedNode = null;
-            for (int i = 0; i < windows.Count; i++)
+            for (int i = 0; i < nodes.Count; i++)
             {
-                if (windows[i].windowRect.Contains(e.mousePosition))
+                if (nodes[i].windowRect.Contains(e.mousePosition))
                 {
                     clickOnWindow = true;
-                    selectedNode = windows[i];
+                    selectedNode = nodes[i];
                     break;
                 }
             }
@@ -147,13 +149,13 @@ namespace SA.DialogueEditor
                         questionNode.nodeName = "Question";
                     }
 
-                    windows.Add(questionNode);
+                    nodes.Add(questionNode);
 
                     break;
                 case UserActions.deleteNode:
                     if (selectedNode != null)
                     {
-                        windows.Remove(selectedNode);
+                        nodes.Remove(selectedNode);
                     }
                     break;
             }

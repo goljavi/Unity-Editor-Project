@@ -16,7 +16,8 @@ public abstract class BaseEditorNode : ScriptableObject
 
     void OnEnable()
     {
-        if(nodeName == "Base Node") node = new RootNode();
+        if (nodeName == "Base Node") node = new RootNode();
+        else node = new Node("");
     }
 
     public virtual void DrawWindow()
