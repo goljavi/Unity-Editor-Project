@@ -12,7 +12,7 @@ public class QuestionNode : BaseEditorNode {
 	public QuestionNode() {
 		windowRect = new Rect(0, 0, 300, 100);
 		nodeName = "Chat";
-		this.node = node;
+		node = new Node("");
 	}
 
 	public override void DrawWindow() {
