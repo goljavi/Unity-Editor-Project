@@ -11,19 +11,24 @@ public class Node : BaseNode
     public string text;
     public Option parent;
     public List<Option> options = new List<Option>();
-	private int nodeID;
+	private readonly uint nodeID;
 	private static uint nodeCount = 0;
 
     public Node(string newTextContent) // Crear nodo raiz o inicial
     {
         text = newTextContent;
+		nodeID = nodeCount;
+		nodeCount++;
     }
 
     public Node(string newTextContent, Option newParent) //Crear nodo hijo o comun
     {
         text = newTextContent;
         parent = newParent;
+		nodeID = nodeCount;
+		nodeCount++;
     }
+
 
 
     public void AddOption(string optionText = "")
@@ -62,7 +67,7 @@ public class Option
 {
 	private string text;
 	private Node childNode;
-	private readonly Node container;
+	public readonly Node container;
 
     public Option(Node container)
     {
