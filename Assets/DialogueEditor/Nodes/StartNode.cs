@@ -4,7 +4,6 @@ using UnityEngine;
 
 
 public class StartNode : BaseEditorNode {
-	new private RootNode node;
 
 	public StartNode() {
 		node = new RootNode();

@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-using SA;
 
 
 public class QuestionNode : BaseEditorNode {
-	private Vector2 textAreaSize = new Vector2(0, 0);
 	new public Node node;
+    public DialogueEditor dialogueEditorReference;
+
 
 	public QuestionNode() {
 		windowRect = new Rect(0, 0, 300, 100);
@@ -20,15 +20,12 @@ public class QuestionNode : BaseEditorNode {
 		GUIStyle style = GUI.skin.box;
 		style.alignment = TextAnchor.MiddleCenter;
 
-		GUIContent content = new GUIContent(node.text);
-		textAreaSize = style.CalcSize(content);
-
 		EditorGUILayout.BeginHorizontal();
 		node.text = EditorGUILayout.TextField(node.text);
 
 		if (GUILayout.Button("Crear!"))
 		{
-			node.AddOption("");
+            dialogueEditorReference.AddQuestionNode(node.AddOption("", node));
 		}
 		EditorGUILayout.EndHorizontal();
 
@@ -37,7 +34,7 @@ public class QuestionNode : BaseEditorNode {
 			EditorGUILayout.BeginHorizontal();
 			if (GUILayout.Button("-"))
 			{
-				node.options.RemoveAt(i);
+                node.options.RemoveAt(i);
 				break;
 			}
 

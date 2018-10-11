@@ -14,12 +14,6 @@ public abstract class BaseEditorNode : ScriptableObject
     public float addedWindowHeight = 0;
     public BaseNode node;
 
-    void OnEnable()
-    {
-        if (nodeName == "Base Node") node = new RootNode();
-        else node = new Node("");
-    }
-
     public virtual void DrawWindow()
     {
         addedWindowHeight = 0;
