@@ -118,6 +118,7 @@ public class DialogueEditor : EditorWindow
         if (selectedNode is StartNode)
         {
             menu.AddSeparator("");
+            menu.AddItem(new GUIContent("Add Question"), false, ContextCallback, UserActions.addQuestion);
         }
 
         menu.ShowAsContext();
@@ -132,6 +133,9 @@ public class DialogueEditor : EditorWindow
             case UserActions.deleteNode:
                 RemoveQuestionNode();
                 break;
+            case UserActions.addQuestion:
+                AddQuestionNode();
+                break;
         }
     }
 
@@ -140,6 +144,7 @@ public class DialogueEditor : EditorWindow
         StartNode startingNode = StartNode.CreateInstance<StartNode>();
         startingNode.windowRect = new Rect(0, 0, 100, 100);
         startingNode.nodeName = "Starting Node";
+        //AddQuestionNode(startingNode.node.AddOption("", startingNode.node)) -> No me deja añadirle como parent al question node porque el startingnode es un BaseNode y no un Node
         nodes.Add(startingNode);
     }
 
@@ -149,7 +154,6 @@ public class DialogueEditor : EditorWindow
         questionNode.windowRect = new Rect(50, 150, 400, 200);
         questionNode.nodeName = "Question";
         questionNode.dialogueEditorReference = this;
-        questionNode.node.ChangeParent(parent);
         nodes.Add(questionNode);
     }
 
