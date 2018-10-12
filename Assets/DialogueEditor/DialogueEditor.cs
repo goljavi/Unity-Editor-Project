@@ -9,6 +9,7 @@ public class DialogueEditor : EditorWindow
     private Vector3 mousePosition;
     private bool clickOnWindow;
     private BaseEditorNode selectedNode;
+    DialogueNodeMap _assetFile;
 
     public enum UserActions
     {
@@ -18,21 +19,34 @@ public class DialogueEditor : EditorWindow
         deleteNode
     }
 
-    [MenuItem("Dialogue Editor/Editor")]
     static void ShowEditor()
     {
         DialogueEditor editor = EditorWindow.GetWindow<DialogueEditor>();
         editor.minSize = new Vector2(400, 200);
     }
 
-    void Awake()
-    {
-        CreateStartingNode();
-    }
-
-    void OnDestroy()
+    public void LoadAssetFile(DialogueNodeMap assetFile)
     {
         nodes.Clear();
+
+        _assetFile = assetFile;
+        if(assetFile.nodes != null)
+        {
+            
+            nodes.AddRange(assetFile.nodes);
+        }
+        else
+        {
+            assetFile.nodes = new List<BaseEditorNode>();
+            CreateStartingNode();
+            SaveToAssetFile();
+        }
+    }
+
+    void SaveToAssetFile()
+    {
+        _assetFile.nodes.Clear();
+        _assetFile.nodes.AddRange(nodes);
     }
 
     private void OnGUI()
@@ -155,6 +169,8 @@ public class DialogueEditor : EditorWindow
         questionNode.nodeName = "Question";
         questionNode.dialogueEditorReference = this;
         nodes.Add(questionNode);
+
+        SaveToAssetFile();
     }
 
     public void RemoveQuestionNode(BaseEditorNode node = null)

@@ -18,6 +18,11 @@ public class DialogueNodeMapEditor : Editor {
         if (GUILayout.Button("Abrir Ventana de Nodos"))
         {
             window = EditorWindow.GetWindow<DialogueEditor>();
+            window.LoadAssetFile(_target);
+            foreach (var n in _target.nodes)
+            {
+                Debug.Log(n);
+            }
         }
     }
 }
