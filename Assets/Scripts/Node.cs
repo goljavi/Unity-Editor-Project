@@ -19,8 +19,21 @@ public abstract class BaseNode {
 public class Node : BaseNode {
 
 	public string text;
-	public Option parent;
+	private Option parent;
 	public List<Option> options = new List<Option>();
+
+	public Option Parent {
+		get
+		{
+			return parent;
+		}
+		set
+		{
+			parent = value;
+			if(value!=null)
+				value.ChildNode = this;
+		}
+	}
 
 	public Node(string newTextContent) // Crear nodo raiz o inicial
 	{
@@ -44,7 +57,8 @@ public class Node : BaseNode {
 
 	public void ChangeParent(Option newParentOption) {
 		parent = newParentOption;
-		newParentOption.ChildNode = this;
+		if(newParentOption!=null)
+			newParentOption.ChildNode = this;
 	}
 }
 
@@ -89,7 +103,7 @@ public class Option {
 	public Node ChildNode {
 		set
 		{
-			childNode.parent = null;
+			childNode.Parent = null;
 			childNode = value;
 		}
 		get
