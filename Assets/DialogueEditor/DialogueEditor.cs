@@ -32,8 +32,8 @@ public class DialogueEditor : EditorWindow
         _assetFile = assetFile;
         if(assetFile.nodes != null)
         {
-            
             nodes.AddRange(assetFile.nodes);
+			BaseNode.NodeCount = assetFile.idCount;
         }
         else
         {
@@ -47,6 +47,7 @@ public class DialogueEditor : EditorWindow
     {
         _assetFile.nodes.Clear();
         _assetFile.nodes.AddRange(nodes);
+		_assetFile.idCount = BaseNode.NodeCount;
     }
 
     private void OnGUI()

@@ -6,7 +6,19 @@ public abstract class BaseNode {
 
 	public string title;
 	public readonly uint nodeID;
-	protected static uint nodeCount = 0;
+	private static uint nodeCount = 0;
+
+	public static uint NodeCount {
+		get
+		{
+			return nodeCount;
+		}
+
+		set
+		{
+			nodeCount = value;
+		}
+	}
 
 	public BaseNode() {
 		nodeID = BaseNode.nodeCount;
