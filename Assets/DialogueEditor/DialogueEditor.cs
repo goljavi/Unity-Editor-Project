@@ -168,6 +168,7 @@ public class DialogueEditor : EditorWindow
         questionNode.windowRect = new Rect(50, 150, 400, 200);
         questionNode.nodeName = "Question";
         questionNode.dialogueEditorReference = this;
+		questionNode.node.parent = parent;
         nodes.Add(questionNode);
 
         SaveToAssetFile();
