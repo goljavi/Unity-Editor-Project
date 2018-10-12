@@ -19,10 +19,6 @@ public class DialogueNodeMapEditor : Editor {
         {
             window = EditorWindow.GetWindow<DialogueEditor>();
             window.LoadAssetFile(_target);
-            foreach (var n in _target.nodes)
-            {
-                Debug.Log(n);
-            }
         }
     }
 }
