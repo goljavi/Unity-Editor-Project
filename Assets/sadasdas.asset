@@ -11,4 +11,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf7da5580a288c740aa183663abb9b21, type: 3}
   m_Name: sadasdas
   m_EditorClassIdentifier: 
-  nodes: []
+  nodes:
+  - id: 2340
+    parentIds: 
+    windowRect:
+      serializedVersion: 2
+      x: 774
+      y: 251
+      width: 100
+      height: 100
+    windowTitle: Start
+    jsonObject: 
