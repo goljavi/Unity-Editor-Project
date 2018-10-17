@@ -11,6 +11,16 @@ public class OptionNode : BaseNode {
         text = EditorGUILayout.TextArea(text, GUILayout.Height(80));
     }
 
+    public override string GetNodeData()
+    {
+        return JsonUtility.ToJson(text);
+    }
+
+    public override void SetNodeData(string data)
+    {
+        text = data;
+    }
+
     public override void DrawConnection()
     {
         if (parents.Count > 0)

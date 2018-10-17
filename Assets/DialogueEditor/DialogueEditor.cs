@@ -79,11 +79,14 @@ public class DialogueEditor : EditorWindow {
             }
             else if (map.windowTitle == "Dialogue")
             {
-                AddDialogueNode(map.windowRect, map.id);
+                /* En este caso "AddDialogueNode" devuelve el nodo que crea, por lo tanto, 
+                 * utilizando el nodo que devuelve puedo usar su función SetNodeData() y pasarle la varialbe
+                 * jsonObject para que el nodo se encargue de interpretarla y rellenar el contenido del nodo */
+                AddDialogueNode(map.windowRect, map.id).SetNodeData(map.jsonObject);
             }
             else if (map.windowTitle == "Option")
             {
-                AddOptionNode(map.windowRect, map.id);
+                AddOptionNode(map.windowRect, map.id).SetNodeData(map.jsonObject);
             }
         }
 
@@ -144,7 +147,15 @@ public class DialogueEditor : EditorWindow {
             }
 
             //Genero el DialogueMapSerializedObject y lo agrego a la lista
-            _assetFile.nodes.Add(new DialogueMapSerializedObject() { id = node.id, parentIds = parentsIds, windowRect = node.windowRect, windowTitle = node.windowTitle });
+            _assetFile.nodes.Add(
+                new DialogueMapSerializedObject() {
+                    id = node.id,
+                    parentIds = parentsIds,
+                    windowRect = node.windowRect,
+                    windowTitle = node.windowTitle,
+                    jsonObject = node.GetNodeData()
+                }
+            );
         }
 
         //Esto no sé bien que hace pero se solucionó un bug usandolo.

@@ -22,6 +22,12 @@ public abstract class BaseNode {
 	public virtual void DrawNode() { }
     public virtual void DrawConnection() { }
 
+    /* Cada nodo sabe cual es la data que contiene y por lo tanto tiene que saber como serializarla y deserializarla
+     * ya que necesitamos un medio generico por el cual información que de otra forma, es extremadamente variada
+     * Por lo tanto al setear u obtener la información que contiene dentro el nodo, la misma se pasa a través de JSON */
+    public virtual void SetNodeData(string data) { }
+    public virtual string GetNodeData() { return ""; }
+
     //Builder
     public virtual BaseNode SetWindowRect(Rect value)
     {

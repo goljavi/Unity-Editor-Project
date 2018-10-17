@@ -11,6 +11,16 @@ public class DialogueNode : BaseNode {
         text = EditorGUILayout.TextArea(text, GUILayout.Height(80));
     }
 
+    public override string GetNodeData()
+    {
+        return text;
+    }
+
+    public override void SetNodeData(string data)
+    {
+        text = data;
+    }
+
     public override void DrawConnection()
     {
         if (parents.Count > 0)
