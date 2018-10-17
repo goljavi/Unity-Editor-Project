@@ -2,12 +2,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/* Esta es una clase abstracta, lo que significa que no se pueden generar BaseNodes, pero nos sirve para que 
+ * cada nodo que herede de BaseNode, herede toda la funcionalidad y podamos tratar a todos los tipos de nodo 
+ * como "BaseNode" por polimorfismo hasta que realmente necesitemos saber que tipo de nodo es */
 public abstract class BaseNode {
     public int id;
+
+    //Guardamos los nodos que sean padres de este nodo
     public List<BaseNode> parents = new List<BaseNode>();
+
+    //Estas variables las pide GUI.Window()
     public Rect windowRect;
     public string windowTitle;
+
+    //Guardo la referencia a la ventana de nodos en caso de que el nodo necesite llamar a algún metodo de esta
     public DialogueEditor reference;
+
+    //Estas funciones son llamadas por la ventana de nodos para que cada nodo dibuje su contenido y sus conexiones
 	public virtual void DrawNode() { }
     public virtual void DrawConnection() { }
 

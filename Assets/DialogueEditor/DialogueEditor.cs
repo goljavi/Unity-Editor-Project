@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-/* Este script que se encarga de recibir el archivo de tipo "DialogueNodeMap", deserializarlo, 
- * mostrar la interfaz de nodos, permitir la edición de los mismos y la serialización al guardar los mismos.
- */
+/* Este script que se encarga de recibir el archivo de tipo "DialogueNodeMap", deserializarlo, mostrar
+ * la interfaz de nodos, permitir la edición de los mismos y la serialización al guardar los mismos. */
 public class DialogueEditor : EditorWindow {
 
     #region VARIABLES
@@ -177,8 +176,7 @@ public class DialogueEditor : EditorWindow {
         BeginWindows();
 
         /* Cada tipo de nodo puede tener su preferencia de como dibujar las conexiones entre el y su padre
-         * así que recorro todos los nodos y les pido a cada uno que se encargue de dibujar la conexión entre el y su padre
-         */
+         * así que recorro todos los nodos y les pido a cada uno que se encargue de dibujar la conexión entre el y su padre */
         foreach (BaseNode n in _nodes)
         {
             n.DrawConnection();
@@ -198,8 +196,7 @@ public class DialogueEditor : EditorWindow {
     void DrawNodeWindow(int id)
     {
         /* Cada tipo de nodo puede tener su preferencia de mostrar dentro del mismo
-         * así que le pido al nodo que se encargue de dibujar y mostrar su contenido
-         */
+         * así que le pido al nodo que se encargue de dibujar y mostrar su contenido */
         _nodes[id].DrawNode();
 
         //Esta función hace que el nodo se pueda mover con el mouse
@@ -261,10 +258,12 @@ public class DialogueEditor : EditorWindow {
         }
     }
 
-    //Esto se explica por si solo
+    //Acá se genera el menu contextual si no se hizo click derecho en ningún nodo
     void AddNewNode(Event e)
     {
         GenericMenu menu = new GenericMenu();
+        
+        //AddItem pide una función y un parametro para pasarle si se hace click en el item
         menu.AddItem(new GUIContent("Add Start"), false, ContextMenuActions, UserActions.addStartNode);
         menu.AddItem(new GUIContent("Add Dialogue"), false, ContextMenuActions, UserActions.addDialogueNode);
         menu.AddItem(new GUIContent("Add End"), false, ContextMenuActions, UserActions.addEndNode);
@@ -272,6 +271,7 @@ public class DialogueEditor : EditorWindow {
         e.Use();
     }
 
+    //Acá se generan los menues contextuales según el nodo en el cual se hizo click derecho
     void ModifyNode(Event e)
     {
         GenericMenu menu = new GenericMenu();
@@ -337,26 +337,41 @@ public class DialogueEditor : EditorWindow {
         }
     }
 
+    //Borra el nodo seleccionado
     public void DeleteNode()
     {
+        //Agarro el ultimo nodo en el que hice click derecho
         var target = _lastRightClickedNode;
+
+        //Borro todas las referencias del nodo en sus nodos hijo
         RemoveParentReferencesInChildNodes(target);
+
+        //Borro el id de la lista de id's
         _idList.Remove(target.id);
+
+        //Borro el nodo de la lista de nodos
         _nodes.Remove(target);
     }
 
+    //Genera una conexión entre dos nodos preexistentes
     public void AddConnection()
     {
         if (_lastRightClickedNode == null || _lastLeftClickedNode == null) return;
+
+        /* Ya que hay nodos que no pueden tener ciertos tipos de padre (el nodo respuesta no puede 
+         * tener otro nodo respuesta como padre) chequeo que la conexión que se intente hacer sea válida */
         if (_lastLeftClickedNode is StartNode && _lastRightClickedNode is DialogueNode
             || _lastLeftClickedNode is DialogueNode && _lastRightClickedNode is OptionNode
             || _lastLeftClickedNode is OptionNode && _lastRightClickedNode is DialogueNode
             || _lastLeftClickedNode is EndNode && _lastRightClickedNode is OptionNode)
         {
+            /* Si la conexión es válida seteo al ultimo nodo en el cual se hizo click 
+             * izquierdo como el padre del ultimo nodo en el que se hizo click derecho */
             _lastRightClickedNode.SetParent(_lastLeftClickedNode);
         }   
     }
 
+    //Crea el StartNode
     public StartNode AddStartNode(Rect rect, int id)
     {
         StartNode startNode = new StartNode();
@@ -365,6 +380,7 @@ public class DialogueEditor : EditorWindow {
         return startNode;
     }
 
+    //Crea el EndNode
     public EndNode AddEndNode(Rect rect, int id)
     {
         EndNode endNode = new EndNode();
@@ -373,6 +389,7 @@ public class DialogueEditor : EditorWindow {
         return endNode;
     }
 
+    //Crea el DialogueNode
     public DialogueNode AddDialogueNode(Rect rect, int id, BaseNode parent = null)
     {
         DialogueNode dialogueNode = new DialogueNode();
@@ -381,6 +398,7 @@ public class DialogueEditor : EditorWindow {
         return dialogueNode;
     }
 
+    //Crea el OptionNode
     public OptionNode AddOptionNode(Rect rect, int id, DialogueNode parent = null)
     {
         OptionNode optionNode = new OptionNode();
@@ -389,27 +407,37 @@ public class DialogueEditor : EditorWindow {
         return optionNode;
     }
 
+    //Metodo Helper que es llamado desde los nodos para crear la conexión entre ellos y sus padres
     public static void DrawNodeConnection(Rect start, Rect end, bool left, Color curveColor)
     {
         Handles.DrawLine(start.center, end.center);
     }
 
+    //Borra la referencia de un nodo en sus nodos hijos
     public void RemoveParentReferencesInChildNodes(BaseNode target)
     {
+        //Busco a sus nodos hijo
         var childNodes = GetChildNodes(target);
+
+        //Recorro a cada uno de ellos y les remuevo la referencia de su padre
         foreach (var node in childNodes)
         {
             node.parents.Remove(target);
         }
     }
 
+    //Genera una lista con todos los nodos que contienen la referencia padre de otro nodo
     public List<BaseNode> GetChildNodes(BaseNode n)
     {
         List<BaseNode> childs = new List<BaseNode>();
+
+        //Recorro cada nodo
         foreach (var node in _nodes)
         {
+            //Recorro cada nodo padre en cada nodo
             foreach (var parent in node.parents)
             {
+                //Si hay coincidencia entre el nodo padre y el nodo de referencia, lo agrego a la lista
                 if (parent == n)
                 {
                     childs.Add(node);
@@ -420,6 +448,8 @@ public class DialogueEditor : EditorWindow {
         return childs;
     }
 
+    /* Genera un ID al azar y se fija que no esté creado. Si está creado 
+     * genera otro, si no lo está lo guarda en la lista y lo devuelve */
     public int GetNewId()
     {
         int randomNumber;
