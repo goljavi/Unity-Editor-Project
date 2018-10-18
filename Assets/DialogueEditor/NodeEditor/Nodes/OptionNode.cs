@@ -13,7 +13,7 @@ public class OptionNode : BaseNode {
 
     public override string GetNodeData()
     {
-        return JsonUtility.ToJson(text);
+        return text;
     }
 
     public override void SetNodeData(string data)

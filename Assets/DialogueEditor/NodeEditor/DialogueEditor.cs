@@ -82,11 +82,11 @@ public class DialogueEditor : EditorWindow {
                 /* En este caso "AddDialogueNode" devuelve el nodo que crea, por lo tanto, 
                  * utilizando el nodo que devuelve puedo usar su función SetNodeData() y pasarle la varialbe
                  * jsonObject para que el nodo se encargue de interpretarla y rellenar el contenido del nodo */
-                AddDialogueNode(map.windowRect, map.id).SetNodeData(map.jsonObject);
+                AddDialogueNode(map.windowRect, map.id).SetNodeData(map.data);
             }
             else if (map.windowTitle == "Option")
             {
-                AddOptionNode(map.windowRect, map.id).SetNodeData(map.jsonObject);
+                AddOptionNode(map.windowRect, map.id).SetNodeData(map.data);
             }
         }
 
@@ -153,7 +153,7 @@ public class DialogueEditor : EditorWindow {
                     parentIds = parentsIds,
                     windowRect = node.windowRect,
                     windowTitle = node.windowTitle,
-                    jsonObject = node.GetNodeData()
+                    data = node.GetNodeData()
                 }
             );
         }

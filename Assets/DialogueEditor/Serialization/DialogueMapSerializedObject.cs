@@ -11,5 +11,5 @@ public class DialogueMapSerializedObject {
     public List<int> parentIds = new List<int>();
     public Rect windowRect;
     public string windowTitle;
-    public string jsonObject;
+    public string data;
 }

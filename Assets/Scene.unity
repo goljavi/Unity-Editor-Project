@@ -125,6 +125,7 @@ GameObject:
   - component: {fileID: 649844623}
   - component: {fileID: 649844622}
   - component: {fileID: 649844621}
+  - component: {fileID: 649844626}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -143,7 +144,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 191a969821b8c234d94cd64f5a2f327d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dialog: {fileID: 11400000, guid: fe2fe2a77ecafd048b5ddea193557960, type: 2}
+  dialog: {fileID: 11400000, guid: b74bf6dd7e6b74b49b03d22bb0f9fecd, type: 2}
 --- !u!23 &649844622
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -210,6 +211,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &649844626
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 649844620}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50bb2123945339d4e9bf926aa65c73af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &716548724
 GameObject:
   m_ObjectHideFlags: 0
