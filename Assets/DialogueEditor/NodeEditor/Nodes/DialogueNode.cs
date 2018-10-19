@@ -6,9 +6,11 @@ using UnityEditor;
 public class DialogueNode : BaseNode {
     public string text;
 
+
     public override void DrawNode()
     {
-        text = EditorGUILayout.TextArea(text, GUILayout.Height(80));
+        EditorStyles.textArea.wordWrap = true;
+        text = EditorGUILayout.TextArea(text, EditorStyles.textArea ,GUILayout.Height(80));
     }
 
     public override string GetNodeData()

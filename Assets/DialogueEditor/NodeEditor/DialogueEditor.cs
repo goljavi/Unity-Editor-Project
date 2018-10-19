@@ -8,6 +8,13 @@ using UnityEditor;
 public class DialogueEditor : EditorWindow {
 
     #region VARIABLES
+    //Aca se guardan las variables de la toolbar
+    private GUIStyle myStyle;
+    private float toolbarHeight = 100;
+
+    private Vector2 graphPan;
+    private Rect graphRect;
+
     //Acá se guardan los nodos que se muestran en la ventana. Esta lista se muestra en cada OnGUI() -> DrawNodes()
     List<BaseNode> _nodes = new List<BaseNode>();
 
@@ -164,12 +171,35 @@ public class DialogueEditor : EditorWindow {
     #endregion
 
     #region DIBUJADO DE LOS NODOS Y REGISTRO DE INPUT
-    //Es el update del EditorWindow
-    private void OnGUI()
+        //Es el update del EditorWindow
+        private void OnGUI()
     {
+        //Estos son los valores del GUIStyle
+        var mySelf = GetWindow<DialogueEditor>();
+        mySelf.myStyle = new GUIStyle();
+        mySelf.myStyle.fontSize = 20;
+        mySelf.myStyle.alignment = TextAnchor.MiddleCenter;
+        mySelf.myStyle.fontStyle = FontStyle.BoldAndItalic;
+
         //Logeo la posición del mouse
         Event e = Event.current;
+   
         _mousePosition = e.mousePosition;
+
+        //Esta es la Toolbar con el titulo y el boton *De momento no hace nada*
+        EditorGUILayout.BeginVertical(GUILayout.Height(100));
+        EditorGUILayout.LabelField("Dialogue Editor", myStyle, GUILayout.Height(50));
+        EditorGUILayout.Space();
+        EditorGUILayout.BeginHorizontal();
+        if (GUILayout.Button("Load dialogue map", GUILayout.Width(150), GUILayout.Height(30)))
+            //Agregar función para el boton...
+
+        EditorGUILayout.EndHorizontal();
+        EditorGUILayout.EndVertical();
+
+        graphRect.x = graphPan.x;
+        graphRect.y = graphPan.y;
+        EditorGUI.DrawRect(new Rect(0, toolbarHeight, position.width, position.height - toolbarHeight), Color.gray);
 
         //Registro si hizo click izquierdo o derecho
         UserInput(e);
@@ -180,6 +210,7 @@ public class DialogueEditor : EditorWindow {
         //Guardo la información registrada hasta el momento
         SaveAssetFile();
     }
+
 
     //Se encarga de dibujar los nodos sobre la ventana
     void DrawNodes()
