@@ -1,0 +1,64 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf7da5580a288c740aa183663abb9b21, type: 3}
+  m_Name: RoyaleWithCheese
+  m_EditorClassIdentifier: 
+  nodes:
+  - id: 7694
+    parentIds: 
+    windowRect:
+      serializedVersion: 2
+      x: 289
+      y: 137
+      width: 100
+      height: 100
+    windowTitle: Start
+    data: 
+  - id: 9334
+    parentIds: 0e1e0000be1b0000
+    windowRect:
+      serializedVersion: 2
+      x: 561
+      y: -7
+      width: 200
+      height: 130
+    windowTitle: Dialogue
+    data: Sabes como le dicen al cuarto de libra en Francia?
+  - id: 327
+    parentIds: 76240000
+    windowRect:
+      serializedVersion: 2
+      x: 518
+      y: 344
+      width: 200
+      height: 130
+    windowTitle: Option
+    data: Royale With Chesse
+  - id: 7102
+    parentIds: 76240000
+    windowRect:
+      serializedVersion: 2
+      x: 821
+      y: 343
+      width: 200
+      height: 130
+    windowTitle: Option
+    data: Cuarte de libre
+  - id: 7059
+    parentIds: 76240000
+    windowRect:
+      serializedVersion: 2
+      x: 982
+      y: 260
+      width: 200
+      height: 130
+    windowTitle: Option
+    data: Trick quesiton. No hay mcdonalds en Francia!
