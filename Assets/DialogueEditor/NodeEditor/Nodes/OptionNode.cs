@@ -6,7 +6,9 @@ using UnityEditor;
 public class OptionNode : BaseNode {
     public string text;
 
-    public override void DrawNode()
+	public override string GetNodeType { get { return "Option"; } }
+
+	public override void DrawNode()
     {
         text = EditorGUILayout.TextArea(text, GUILayout.Height(80));
     }
@@ -21,14 +23,5 @@ public class OptionNode : BaseNode {
         text = data;
     }
 
-    public override void DrawConnection()
-    {
-        if (parents.Count > 0)
-        {
-            foreach(var parent in parents)
-            {
-                if (parent != null) DialogueEditor.DrawNodeConnection(parent.windowRect, windowRect, true, Color.black);
-            }
-        }
-    }
+
 }

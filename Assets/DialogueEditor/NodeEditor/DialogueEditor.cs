@@ -41,7 +41,9 @@ public class DialogueEditor : EditorWindow {
         addDialogueNode,
         addOptionNode,
         deleteNode,
-        addConnection
+        addConnection,
+		addComparisonNode,
+		addConnectionAsFalse
     }
     #endregion
 
@@ -64,36 +66,38 @@ public class DialogueEditor : EditorWindow {
         _idList.Clear();
 
         //Interpreto en base al título que clase de nodo se guardó y lo genero en la ventana
-        foreach(var map in assetFile.nodes)
+        foreach(DialogueMapSerializedObject item in assetFile.nodes)
         {
             //Guardo el ID de cada uno en la lista de ID's, para que al crear nuevos no se superpongan
-            _idList.Add(map.id);
+            _idList.Add(item.id);
 
-            if (map.windowTitle == "Start")
-            {
-                AddStartNode(map.windowRect, map.id);
-            }
-            else if (map.windowTitle == "End")
-            {
-                AddEndNode(map.windowRect, map.id);
-            }
-            else if (map.windowTitle == "Dialogue")
-            {
-                /* En este caso "AddDialogueNode" devuelve el nodo que crea, por lo tanto, 
-                 * utilizando el nodo que devuelve puedo usar su función SetNodeData() y pasarle la varialbe
-                 * jsonObject para que el nodo se encargue de interpretarla y rellenar el contenido del nodo */
-                AddDialogueNode(map.windowRect, map.id).SetNodeData(map.data);
-            }
-            else if (map.windowTitle == "Option")
-            {
-                AddOptionNode(map.windowRect, map.id).SetNodeData(map.data);
-            }
+			switch (item.nodeType)
+			{
+				case "Start":
+					AddNode<StartNode>(item.windowRect, item.id);
+					break;
+				case "End":
+					AddNode<EndNode>(item.windowRect, item.id);
+					break;
+				case "Dialogue":
+					/* En este caso "AddDialogueNode" devuelve el nodo que crea, por lo tanto, 
+				* utilizando el nodo que devuelve puedo usar su función SetNodeData() y pasarle la varialbe
+				* jsonObject para que el nodo se encargue de interpretarla y rellenar el contenido del nodo */
+					AddNode<DialogueNode>(item.windowRect, item.id).SetNodeData(item.data);
+					break;
+				case "Option":
+					AddNode<OptionNode>(item.windowRect, item.id).SetNodeData(item.data);
+					break;
+				case "Comparison":
+					AddNode<ComparativeNode>(item.windowRect, item.id).SetNodeData(item.data);
+					break;
+			}
         }
 
         /* Una vez que están todos creados por separado les asigno sus padres a cada uno
          * Por cada "DialogueMapSerializedObject" (detro de el archivo serializado)
          */
-        foreach (var map in assetFile.nodes)
+        foreach (DialogueMapSerializedObject item in assetFile.nodes)
         {
             //Por cada Nodo (no serializado, sino dentro del editor)
             foreach (var node in _nodes)
@@ -101,13 +105,13 @@ public class DialogueEditor : EditorWindow {
                 /* Busco la coincidencia, es decir que estoy parado en el mismo nodo
                  * tanto en el foreach de DialogueMapSerializedObject como en el de los Nodos
                  */
-                if (node.id == map.id)
+                if (node.id == item.id)
                 {
                     /* Si hay coincidencia recorro cada parentId del DialogueMapSerializedObject
                      * Ya que lo necesito para luego buscar la coincidencia entre el ID y el nodo 
                      * generado y así finalmente asignarle el padre a su hijo
                      */
-                    foreach (var parentId in map.parentIds)
+                    foreach (var parentId in item.parentIds)
                     {
                         /* Vuelvo a hacer un recorrido de cada uno de los nodos ya 
                          * generados para encontrar el nodo que contenga el parentId
@@ -120,6 +124,11 @@ public class DialogueEditor : EditorWindow {
                                  * como padre del nodo que se encontró recorriendo los id del objeto serializado
                                  */
                                 node.SetParent(n);
+
+								if((INeedsChildren)n != null)
+								{
+									((INeedsChildren)n).AssignChild(node, -1);
+								}
                             }
                         }
                     }
@@ -146,14 +155,16 @@ public class DialogueEditor : EditorWindow {
                 if(parent != null) parentsIds.Add(parent.id);
             }
 
-            //Genero el DialogueMapSerializedObject y lo agrego a la lista
-            _assetFile.nodes.Add(
-                new DialogueMapSerializedObject() {
-                    id = node.id,
-                    parentIds = parentsIds,
-                    windowRect = node.windowRect,
-                    windowTitle = node.windowTitle,
-                    data = node.GetNodeData()
+			//Genero el DialogueMapSerializedObject y lo agrego a la lista
+			_assetFile.nodes.Add(
+				new DialogueMapSerializedObject() {
+					id = node.id,
+					parentIds = parentsIds,
+					windowRect = node.windowRect,
+					windowTitle = node.windowTitle,
+					data = node.GetNodeData(),
+					nodeType = node.GetNodeType
+
                 }
             );
         }
@@ -278,6 +289,7 @@ public class DialogueEditor : EditorWindow {
         menu.AddItem(new GUIContent("Add Start"), false, ContextMenuActions, UserActions.addStartNode);
         menu.AddItem(new GUIContent("Add Dialogue"), false, ContextMenuActions, UserActions.addDialogueNode);
         menu.AddItem(new GUIContent("Add End"), false, ContextMenuActions, UserActions.addEndNode);
+		menu.AddItem(new GUIContent("Add Comparison"), false, ContextMenuActions, UserActions.addComparisonNode);
         menu.ShowAsContext();
         e.Use();
     }
@@ -286,7 +298,7 @@ public class DialogueEditor : EditorWindow {
     void ModifyNode(Event e)
     {
         GenericMenu menu = new GenericMenu();
-        if(_lastRightClickedNode is DialogueNode)
+		if(_lastRightClickedNode is DialogueNode)
         {
             menu.AddItem(new GUIContent("Add Option"), false, ContextMenuActions, UserActions.addOptionNode);
             menu.AddItem(new GUIContent("Add Connection (with focused node)"), false, ContextMenuActions, UserActions.addConnection);
@@ -307,7 +319,12 @@ public class DialogueEditor : EditorWindow {
         else if (_lastRightClickedNode is EndNode)
         {
             menu.AddItem(new GUIContent("Delete"), false, ContextMenuActions, UserActions.deleteNode);
-        }
+		} else if (_lastRightClickedNode is ComparativeNode)
+		{
+			menu.AddItem(new GUIContent("Add Connection (with focused node)"), false, ContextMenuActions, UserActions.addConnection);
+			menu.AddItem(new GUIContent("Add Dialogue"), false, ContextMenuActions, UserActions.addDialogueNode);
+			menu.AddItem(new GUIContent("Delete"), false, ContextMenuActions, UserActions.deleteNode);
+		}
 
         menu.ShowAsContext();
         e.Use();
@@ -326,16 +343,16 @@ public class DialogueEditor : EditorWindow {
         switch (a)
         {
             case UserActions.addStartNode:
-                AddStartNode(new Rect(_mousePosition.x, _mousePosition.y, 100, 100), GetNewId());
+                AddNode<StartNode>(new Rect(_mousePosition.x, _mousePosition.y, 100, 100), GetNewId());
                 break;
             case UserActions.addDialogueNode:
-                AddDialogueNode(new Rect(_mousePosition.x, _mousePosition.y, 200, 130), GetNewId(), _lastRightClickedNode);
+				AddNode<DialogueNode>(new Rect(_mousePosition.x, _mousePosition.y, 200, 130), GetNewId(), _lastRightClickedNode);
                 break;
             case UserActions.addOptionNode:
-                AddOptionNode(new Rect(_mousePosition.x, _mousePosition.y, 200, 130), GetNewId(), (DialogueNode)_lastRightClickedNode);
+				AddNode<OptionNode>(new Rect(_mousePosition.x, _mousePosition.y, 200, 130), GetNewId(), (DialogueNode)_lastRightClickedNode);
                 break;
             case UserActions.addEndNode:
-                AddEndNode(new Rect(_mousePosition.x, _mousePosition.y, 100, 100), GetNewId());
+                AddNode<EndNode>(new Rect(_mousePosition.x, _mousePosition.y, 100, 100), GetNewId());
                 break;
             case UserActions.addConnection:
                 AddConnection();
@@ -343,7 +360,12 @@ public class DialogueEditor : EditorWindow {
             case UserActions.deleteNode:
                 DeleteNode();
                 break;
-            default:
+			case UserActions.addComparisonNode:
+				AddNode<ComparativeNode>(new Rect(_mousePosition.x, _mousePosition.y, 100, 100), GetNewId());
+				break;
+			case UserActions.addConnectionAsFalse:
+
+			default:
                 break;
         }
     }
@@ -371,10 +393,12 @@ public class DialogueEditor : EditorWindow {
 
         /* Ya que hay nodos que no pueden tener ciertos tipos de padre (el nodo respuesta no puede 
          * tener otro nodo respuesta como padre) chequeo que la conexión que se intente hacer sea válida */
-        if (_lastLeftClickedNode is StartNode && _lastRightClickedNode is DialogueNode
-            || _lastLeftClickedNode is DialogueNode && _lastRightClickedNode is OptionNode
-            || _lastLeftClickedNode is OptionNode && _lastRightClickedNode is DialogueNode
-            || _lastLeftClickedNode is EndNode && _lastRightClickedNode is OptionNode)
+		 //TO DO: Cambiar esta cadena de condiciones por un diccionario/Tupla de transiciones permitidas
+        if ((_lastLeftClickedNode is StartNode && _lastRightClickedNode is DialogueNode)
+            || (_lastLeftClickedNode is DialogueNode && _lastRightClickedNode is OptionNode)
+            || (_lastLeftClickedNode is OptionNode && _lastRightClickedNode is DialogueNode)
+            || (_lastLeftClickedNode is EndNode && _lastRightClickedNode is OptionNode)
+			|| (_lastLeftClickedNode is ComparativeNode && _lastRightClickedNode is OptionNode))
         {
             /* Si la conexión es válida seteo al ultimo nodo en el cual se hizo click 
              * izquierdo como el padre del ultimo nodo en el que se hizo click derecho */
@@ -382,7 +406,7 @@ public class DialogueEditor : EditorWindow {
         }   
     }
 
-    //Crea el StartNode
+    //Crea el StartNode. Deprecado
     public StartNode AddStartNode(Rect rect, int id)
     {
         StartNode startNode = new StartNode();
@@ -391,8 +415,8 @@ public class DialogueEditor : EditorWindow {
         return startNode;
     }
 
-    //Crea el EndNode
-    public EndNode AddEndNode(Rect rect, int id)
+	//Crea el EndNode. Deprecado
+	public EndNode AddEndNode(Rect rect, int id)
     {
         EndNode endNode = new EndNode();
         endNode.SetWindowRect(rect).SetWindowTitle("End").SetId(id).SetReference(this);
@@ -400,8 +424,8 @@ public class DialogueEditor : EditorWindow {
         return endNode;
     }
 
-    //Crea el DialogueNode
-    public DialogueNode AddDialogueNode(Rect rect, int id, BaseNode parent = null)
+	//Crea el DialogueNode. Deprecado
+	public DialogueNode AddDialogueNode(Rect rect, int id, BaseNode parent = null)
     {
         DialogueNode dialogueNode = new DialogueNode();
         dialogueNode.SetWindowRect(rect).SetWindowTitle("Dialogue").SetParent(parent).SetId(id).SetReference(this);
@@ -409,14 +433,23 @@ public class DialogueEditor : EditorWindow {
         return dialogueNode;
     }
 
-    //Crea el OptionNode
-    public OptionNode AddOptionNode(Rect rect, int id, DialogueNode parent = null)
+	//Crea el OptionNode. Deprecado
+	public OptionNode AddOptionNode(Rect rect, int id, DialogueNode parent = null)  
     {
         OptionNode optionNode = new OptionNode();
         optionNode.SetWindowRect(rect).SetWindowTitle("Option").SetParent(parent).SetId(id).SetReference(this);
         _nodes.Add(optionNode);
         return optionNode;
     }
+
+	//Crea el nodo genericamente
+	public TNode AddNode<TNode>(Rect rect, int id, BaseNode parent = null) where TNode : BaseNode, new() {
+		TNode node = new TNode();
+		node.SetWindowRect(rect).SetWindowTitle(node.GetNodeType).SetParent(parent).SetId(id).SetReference(this);
+		if (node.GetType() == typeof(StartNode)) node.SetParent(null);
+		_nodes.Add(node);
+		return node;
+	}
 
     //Metodo Helper que es llamado desde los nodos para crear la conexión entre ellos y sus padres
     public static void DrawNodeConnection(Rect start, Rect end, bool left, Color curveColor)

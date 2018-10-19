@@ -4,31 +4,20 @@ using UnityEngine;
 using UnityEditor;
 
 public class DialogueNode : BaseNode {
-    public string text;
+	public string text;
 
-    public override void DrawNode()
-    {
-        text = EditorGUILayout.TextArea(text, GUILayout.Height(80));
-    }
+	public override string GetNodeType { get { return "Dialogue"; } }
 
-    public override string GetNodeData()
-    {
-        return text;
-    }
+	public override void DrawNode() {
+		text = EditorGUILayout.TextArea(text, GUILayout.Height(80));
+	}
 
-    public override void SetNodeData(string data)
-    {
-        text = data;
-    }
+	public override string GetNodeData() {
+		return text;
+	}
 
-    public override void DrawConnection()
-    {
-        if (parents.Count > 0)
-        {
-            foreach (var parent in parents)
-            {
-                if(parent != null) DialogueEditor.DrawNodeConnection(parent.windowRect, windowRect, true, Color.black);
-            }
-        }
-    }
+	public override void SetNodeData(string data) {
+		text = data;
+	}
+
 }
