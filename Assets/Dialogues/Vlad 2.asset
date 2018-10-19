@@ -1,0 +1,142 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf7da5580a288c740aa183663abb9b21, type: 3}
+  m_Name: Vlad 2
+  m_EditorClassIdentifier: 
+  nodes:
+  - id: 4056
+    parentIds: 
+    windowRect:
+      serializedVersion: 2
+      x: 29
+      y: 12
+      width: 100
+      height: 100
+    windowTitle: Start
+    data: 
+  - id: 746
+    parentIds: d80f0000
+    windowRect:
+      serializedVersion: 2
+      x: 127
+      y: 34
+      width: 200
+      height: 130
+    windowTitle: Dialogue
+    data: "Hola ! Mi nombre es Vlad,\n y no soy un vampiro!"
+  - id: 7071
+    parentIds: ea020000
+    windowRect:
+      serializedVersion: 2
+      x: 371
+      y: 22
+      width: 200
+      height: 130
+    windowTitle: Option
+    data: Por supuesto, Vlad! Te creo.
+  - id: 6578
+    parentIds: ea020000
+    windowRect:
+      serializedVersion: 2
+      x: 119
+      y: 203
+      width: 200
+      height: 130
+    windowTitle: Option
+    data: Que necesidad habia de aclararlo?
+  - id: 6445
+    parentIds: b21900009f1b0000
+    windowRect:
+      serializedVersion: 2
+      x: 378
+      y: 200
+      width: 200
+      height: 130
+    windowTitle: Dialogue
+    data: Sos un mago? Necesitamos de tu ayuda
+  - id: 4810
+    parentIds: 2d190000
+    windowRect:
+      serializedVersion: 2
+      x: 712
+      y: 41
+      width: 200
+      height: 130
+    windowTitle: Option
+    data: Claro que si, capo!
+  - id: 7267
+    parentIds: 2d190000
+    windowRect:
+      serializedVersion: 2
+      x: 644
+      y: 202
+      width: 200
+      height: 130
+    windowTitle: Option
+    data: No, de hecho soy un paladin nivel 80
+  - id: 1845
+    parentIds: 2d190000
+    windowRect:
+      serializedVersion: 2
+      x: 102
+      y: 374
+      width: 200
+      height: 130
+    windowTitle: Option
+    data: '"Mago" es una construccion social. No me gustan las etiquetas'
+  - id: 8762
+    parentIds: 35070000
+    windowRect:
+      serializedVersion: 2
+      x: 331
+      y: 385
+      width: 200
+      height: 130
+    windowTitle: Dialogue
+    data: '.................................ok!'
+  - id: 9464
+    parentIds: 3a220000
+    windowRect:
+      serializedVersion: 2
+      x: 622
+      y: 379
+      width: 200
+      height: 130
+    windowTitle: Option
+    data: '...'
+  - id: 8263
+    parentIds: 631c0000f8240000ca120000
+    windowRect:
+      serializedVersion: 2
+      x: 956
+      y: 250
+      width: 200
+      height: 130
+    windowTitle: Dialogue
+    data: 'Un breve resumen antes de partir:
+
+      -El rey ha desaparecido.
+
+      -Los monstruos estan por todos lados.
+
+      -No soy un Vampiro
+
+      -Debes dirigirte a Havindr'
+  - id: 1199
+    parentIds: 
+    windowRect:
+      serializedVersion: 2
+      x: 1022
+      y: 426
+      width: 100
+      height: 100
+    windowTitle: End
+    data: 

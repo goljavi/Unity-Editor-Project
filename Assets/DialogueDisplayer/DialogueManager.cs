@@ -8,6 +8,7 @@ public class DialogueManager : MonoBehaviour {
     public static DialogueManager instance;
 
     public Text nameText;
+    public Image characterImage;
     public Text dialogueText;
     public Text[] optionsText;
     public int availableOptionSlots;
@@ -32,14 +33,28 @@ public class DialogueManager : MonoBehaviour {
 
     }
 
-    public void StartDialogue(string name, DialogueBehavior db)
+    public void StartDialogue(string name, Sprite face, DialogueBehavior db)
     {
         animator.SetBool("isOpen", true);
-
+        SetFace(face);
         nameText.text = name;
         this.db = db;
 
         PrintDialogue(db.GetStartingDialogue());
+    }
+
+    public void SetFace(Sprite face)
+    {
+        if (face != null)
+        {
+            characterImage.sprite = face;
+            characterImage.enabled = true;
+        }
+        else
+        {
+            characterImage.sprite = null;
+            characterImage.enabled = false;
+        }
     }
 
     public void DisplaySentence(string sentence)
