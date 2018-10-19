@@ -9,6 +9,8 @@ public class DialogueManager : MonoBehaviour {
 
     public Text nameText;
     public Text dialogueText;
+    public Text[] optionsText;
+    public int availableOptionSlots;
 
     public Animator animator;
 
@@ -22,8 +24,10 @@ public class DialogueManager : MonoBehaviour {
         else if (instance != this)
             Destroy(gameObject);
 
-        //        sentences = new Queue<string>();
+        //new stuff below
         currentOptionsIds = new Dictionary<int, int>();
+
+        availableOptionSlots = optionsText.Length;
 
 
     }
@@ -60,6 +64,7 @@ public class DialogueManager : MonoBehaviour {
         Debug.Log("Ending Conversation");
     }
 
+
     //Should refactor below
     void PrintDialogue(DialogueObject dialogue)
     {
@@ -79,10 +84,44 @@ public class DialogueManager : MonoBehaviour {
         foreach (var option in current.options)
         {
             contador++;
-            dialogueString += "(" + contador + "): " + option.Value + " \n";
+            DisplayOption("(" + contador + "): " + option.Value + " \n");
             currentOptionsIds.Add(contador, option.Key);
         }
 
         DisplaySentence(dialogueString);
+    }
+
+    void DisplayOption(string option)
+    {
+        if (availableOptionSlots < 1)
+        {
+            Debug.Log("Run out of space to display options");
+            return;
+        }
+        availableOptionSlots -= 1;
+        optionsText[availableOptionSlots].text = option;
+    }
+
+    public void ChooseOption(int selectedOption)
+    {
+        int selectedValue = selectedOption;
+
+        if (!currentOptionsIds.ContainsKey(selectedOption))
+        {
+            Debug.Log("ERROR! Invalid option index!");
+            return;
+        }
+        ClearOptions();
+        PrintDialogue(db.GetNextDialogue(currentOptionsIds[selectedValue]));
+    }
+
+    void ClearOptions()
+    {
+        foreach(Text text in optionsText)
+        {
+            text.text = "";
+        }
+
+        availableOptionSlots = optionsText.Length;
     }
 }
