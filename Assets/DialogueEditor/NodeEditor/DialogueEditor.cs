@@ -425,10 +425,9 @@ public class DialogueEditor : EditorWindow {
         var direction = distance.normalized;
         Vector2 shorterEndCenter = end.center - distance;
         Vector3 recededEndCenter = new Vector3(shorterEndCenter.x, shorterEndCenter.y, -10f);
-        Handles.DrawLine(start.center, shorterEndCenter); //new Vector2(end.yMin, end.xMin))
+        Handles.DrawLine(start.center, shorterEndCenter); 
         Handles.DrawLine(start.center, end.center);
         Handles.ArrowHandleCap(0, recededEndCenter, Quaternion.LookRotation(direction, Vector3.forward), 100f, EventType.Repaint);
-        //Handles.ArrowCap(0, shorterEndCenter, Quaternion.LookRotation(direction, Vector3.forward), 100f);
     }
 
     //Borra la referencia de un nodo en sus nodos hijos
