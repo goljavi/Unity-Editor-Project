@@ -15,6 +15,7 @@ public class DialogueEditor : EditorWindow {
     private Vector2 graphPan;
     private Rect graphRect;
 
+    //Variables para el paneo
     Vector2 _scrollPos;
     Vector2 _scrollStartPos;
 
@@ -195,7 +196,7 @@ public class DialogueEditor : EditorWindow {
         EditorGUILayout.LabelField("Dialogue Editor", myStyle, GUILayout.Height(50));
         EditorGUILayout.Space();
         EditorGUILayout.BeginHorizontal();
-        if (GUILayout.Button("Load dialogue map", GUILayout.Width(150), GUILayout.Height(30)))
+        if (GUILayout.Button("Save map", GUILayout.Width(150), GUILayout.Height(30)))
             //Agregar función para el boton...
 
         EditorGUILayout.EndHorizontal();
@@ -252,14 +253,15 @@ public class DialogueEditor : EditorWindow {
     //Registra el input del mouse del user
     void UserInput(Event e)
     {
+        //Si el evento fue de tipo "MouseDrag"
         if (e.type == EventType.MouseDrag)
         {
+            //Por cada nodo mostrado en ventana
             for (int i = 0; i < _nodes.Count; i++)
             {
                 if (e.button == 2)
                 {
                     Panning(e);
-                    Debug.Log("caca");
                 }
             }
         }
@@ -324,6 +326,7 @@ public class DialogueEditor : EditorWindow {
         }
     }
 
+    //FUNCIÓN PARA RESETEAR EL SCROLL
     void ResetScroll()
     {
         for (int i = 0; i < _nodes.Count; i++)
