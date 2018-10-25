@@ -9,66 +9,66 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cf7da5580a288c740aa183663abb9b21, type: 3}
-  m_Name: Honguito
+  m_Name: Honguito Segundo
   m_EditorClassIdentifier: 
   nodes:
-  - id: 6203
+  - id: 2144
     parentIds: 
     windowRect:
       serializedVersion: 2
-      x: 108
-      y: 195
+      x: 258
+      y: 194
       width: 100
       height: 100
     windowTitle: Start
     data: 
-  - id: 6547
-    parentIds: 3b180000
+  - id: 1321
+    parentIds: 60080000
     windowRect:
       serializedVersion: 2
-      x: 292
-      y: 192
+      x: 449
+      y: 249
       width: 200
       height: 130
     windowTitle: Dialogue
-    data: Hola Mario. Estas buscando a la princesa?
-  - id: 1709
-    parentIds: 9319000052240000
+    data: Buscas a la princesa?
+  - id: 7857
+    parentIds: 29050000
     windowRect:
       serializedVersion: 2
-      x: 857
-      y: 189
+      x: 678
+      y: 227
       width: 200
       height: 130
     windowTitle: Option
     data: Si
-  - id: 8009
-    parentIds: 93190000
+  - id: 6545
+    parentIds: 29050000
     windowRect:
       serializedVersion: 2
-      x: 294
-      y: 472
+      x: 581
+      y: 487
       width: 200
       height: 130
     windowTitle: Option
     data: No
-  - id: 9298
-    parentIds: 491f0000
+  - id: 787
+    parentIds: 91190000
     windowRect:
       serializedVersion: 2
-      x: 725
-      y: 573
+      x: 854
+      y: 467
       width: 200
       height: 130
     windowTitle: Dialogue
-    data: Oka
-  - id: 2040
-    parentIds: ad060000
+    data: ok
+  - id: 8644
+    parentIds: b11e0000
     windowRect:
       serializedVersion: 2
-      x: 1184
-      y: 214
+      x: 1004
+      y: 227
       width: 200
       height: 130
     windowTitle: Dialogue
-    data: "La princesa no est\xE1 en este castilo\n"
+    data: "La princesa no est\xE1 en este castillo"
