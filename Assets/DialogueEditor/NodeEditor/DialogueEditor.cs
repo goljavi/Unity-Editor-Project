@@ -8,6 +8,17 @@ using UnityEditor;
 public class DialogueEditor : EditorWindow {
 
     #region VARIABLES
+    //Aca se guardan las variables de la toolbar
+    private GUIStyle myStyle;
+    private float toolbarHeight = 100;
+
+    private Vector2 graphPan;
+    private Rect graphRect;
+
+    //Variables para el paneo
+    Vector2 _scrollPos;
+    Vector2 _scrollStartPos;
+
     //Acá se guardan los nodos que se muestran en la ventana. Esta lista se muestra en cada OnGUI() -> DrawNodes()
     List<BaseNode> _nodes = new List<BaseNode>();
 
@@ -41,7 +52,8 @@ public class DialogueEditor : EditorWindow {
         addDialogueNode,
         addOptionNode,
         deleteNode,
-        addConnection
+        addConnection,
+        resetScroll
     }
     #endregion
 
@@ -164,12 +176,35 @@ public class DialogueEditor : EditorWindow {
     #endregion
 
     #region DIBUJADO DE LOS NODOS Y REGISTRO DE INPUT
-    //Es el update del EditorWindow
-    private void OnGUI()
+        //Es el update del EditorWindow
+        private void OnGUI()
     {
+        //Estos son los valores del GUIStyle
+        var mySelf = GetWindow<DialogueEditor>();
+        mySelf.myStyle = new GUIStyle();
+        mySelf.myStyle.fontSize = 20;
+        mySelf.myStyle.alignment = TextAnchor.MiddleCenter;
+        mySelf.myStyle.fontStyle = FontStyle.BoldAndItalic;
+
         //Logeo la posición del mouse
         Event e = Event.current;
+   
         _mousePosition = e.mousePosition;
+
+        //Esta es la Toolbar con el titulo y el boton *De momento no hace nada*
+        EditorGUILayout.BeginVertical(GUILayout.Height(100));
+        EditorGUILayout.LabelField("Dialogue Editor", myStyle, GUILayout.Height(50));
+        EditorGUILayout.Space();
+        EditorGUILayout.BeginHorizontal();
+        if (GUILayout.Button("Save map", GUILayout.Width(150), GUILayout.Height(30)))
+            //Agregar función para el boton...
+
+        EditorGUILayout.EndHorizontal();
+        EditorGUILayout.EndVertical();
+
+        graphRect.x = graphPan.x;
+        graphRect.y = graphPan.y;
+        EditorGUI.DrawRect(new Rect(0, toolbarHeight, position.width, position.height - toolbarHeight), Color.gray);
 
         //Registro si hizo click izquierdo o derecho
         UserInput(e);
@@ -180,6 +215,7 @@ public class DialogueEditor : EditorWindow {
         //Guardo la información registrada hasta el momento
         SaveAssetFile();
     }
+
 
     //Se encarga de dibujar los nodos sobre la ventana
     void DrawNodes()
@@ -217,6 +253,19 @@ public class DialogueEditor : EditorWindow {
     //Registra el input del mouse del user
     void UserInput(Event e)
     {
+        //Si el evento fue de tipo "MouseDrag"
+        if (e.type == EventType.MouseDrag)
+        {
+            //Por cada nodo mostrado en ventana
+            for (int i = 0; i < _nodes.Count; i++)
+            {
+                if (e.button == 2)
+                {
+                    Panning(e);
+                }
+            }
+        }
+
         //Si el evento fue de tipo "MouseDown (click)
         if (e.type == EventType.MouseDown)
         {
@@ -225,6 +274,11 @@ public class DialogueEditor : EditorWindow {
             //Por cada nodo mostrado en ventana
             for (int i = 0; i < _nodes.Count; i++)
             {
+                if (e.button == 2)
+                {
+                    _scrollStartPos = e.mousePosition;
+                }
+                
                 //Si el mouse se encontraba en el rectangulo del nodo
                 if (_nodes[i].windowRect.Contains(e.mousePosition))
                 {
@@ -255,6 +309,35 @@ public class DialogueEditor : EditorWindow {
         }
     }
 
+
+    //FUNCION PARA QUE PANEÉ
+    void Panning(Event e)
+    {
+        Vector2 diff = e.mousePosition - _scrollStartPos;
+        diff *= 1; //"Sensibilidad del paneo"
+        _scrollStartPos = e.mousePosition;
+        _scrollPos += diff;
+
+        for (int i = 0; i < _nodes.Count; i++) //Redibuja los nodos cuando se mueve el mouse
+        {
+            BaseNode b = _nodes[i];
+            b.windowRect.x += diff.x;
+            b.windowRect.y += diff.y;
+        }
+    }
+
+    //FUNCIÓN PARA RESETEAR EL SCROLL
+    void ResetScroll()
+    {
+        for (int i = 0; i < _nodes.Count; i++)
+        {
+            BaseNode b = _nodes[i];
+            b.windowRect.x -= _scrollPos.x;
+            b.windowRect.y -= _scrollPos.y;
+        }
+        _scrollPos = Vector2.zero;
+    }
+
     //Esta función se encarga de llamar a las funciones que hacen los menues contextuales
     void RightClick(Event e, bool clickedOnWindow)
     {
@@ -278,6 +361,10 @@ public class DialogueEditor : EditorWindow {
         menu.AddItem(new GUIContent("Add Start"), false, ContextMenuActions, UserActions.addStartNode);
         menu.AddItem(new GUIContent("Add Dialogue"), false, ContextMenuActions, UserActions.addDialogueNode);
         menu.AddItem(new GUIContent("Add End"), false, ContextMenuActions, UserActions.addEndNode);
+
+        menu.AddSeparator("");
+        menu.AddItem(new GUIContent("Reset Scroll"), false, ContextMenuActions, UserActions.resetScroll);
+
         menu.ShowAsContext();
         e.Use();
     }
@@ -342,6 +429,9 @@ public class DialogueEditor : EditorWindow {
                 break;
             case UserActions.deleteNode:
                 DeleteNode();
+                break;
+            case UserActions.resetScroll:
+                ResetScroll();
                 break;
             default:
                 break;
