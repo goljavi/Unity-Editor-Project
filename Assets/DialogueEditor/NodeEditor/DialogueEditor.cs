@@ -191,20 +191,6 @@ public class DialogueEditor : EditorWindow {
    
         _mousePosition = e.mousePosition;
 
-        //Esta es la Toolbar con el titulo y el boton *De momento no hace nada*
-        EditorGUILayout.BeginVertical(GUILayout.Height(100));
-        EditorGUILayout.LabelField("Dialogue Editor", myStyle, GUILayout.Height(50));
-        EditorGUILayout.Space();
-        EditorGUILayout.BeginHorizontal();
-        if (GUILayout.Button("Save map", GUILayout.Width(150), GUILayout.Height(30)))
-            //Agregar función para el boton...
-
-        EditorGUILayout.EndHorizontal();
-        EditorGUILayout.EndVertical();
-
-        graphRect.x = graphPan.x;
-        graphRect.y = graphPan.y;
-        EditorGUI.DrawRect(new Rect(0, toolbarHeight, position.width, position.height - toolbarHeight), Color.gray);
 
         //Registro si hizo click izquierdo o derecho
         UserInput(e);
@@ -214,6 +200,23 @@ public class DialogueEditor : EditorWindow {
 
         //Guardo la información registrada hasta el momento
         SaveAssetFile();
+
+
+        //Esta es la Toolbar con el titulo y el boton *De momento no hace nada*
+        EditorGUI.DrawRect(new Rect(0,0,position.width,toolbarHeight), Color.gray);
+        EditorGUILayout.BeginVertical(GUILayout.Height(100));
+        EditorGUILayout.LabelField("Dialogue Editor", myStyle, GUILayout.Height(50));
+        EditorGUILayout.Space();
+        EditorGUILayout.BeginHorizontal();
+        if (GUILayout.Button("Save map", GUILayout.Width(150), GUILayout.Height(30)))
+            //Agregar función para el boton...
+
+            EditorGUILayout.EndHorizontal();
+        EditorGUILayout.EndVertical();
+
+        graphRect.x = graphPan.x;
+        graphRect.y = graphPan.y;
+        
     }
 
 
@@ -231,9 +234,11 @@ public class DialogueEditor : EditorWindow {
 
         //Dibujo el nodo sobre la ventana. Le seteo id, Rect, Title y seteo 
         //a DrawNodeWindow como la función para dibujar las cosas internas
+
         for (int i = 0; i < _nodes.Count; i++)
         {
-            _nodes[i].windowRect = GUI.Window(i, _nodes[i].windowRect, DrawNodeWindow, _nodes[i].windowTitle);
+            GUI.backgroundColor = _nodes[i].GetBackgroundColor();
+            _nodes[i].windowRect = GUI.Window(i, _nodes[i].windowRect, DrawNodeWindow, _nodes[i].windowTitle);         
         }
 
         EndWindows();
