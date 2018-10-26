@@ -10,7 +10,13 @@ public class DialogueNode : BaseNode {
     public override void DrawNode()
     {
         EditorStyles.textArea.wordWrap = true;
-        text = EditorGUILayout.TextArea(text, EditorStyles.textArea ,GUILayout.Height(80));
+        text = EditorGUILayout.TextArea(text, EditorStyles.textArea ,GUILayout.Height(80));      
+    }
+
+    public override Color GetBackgroundColor()
+    {
+        windowColor = Color.green;
+        return windowColor;
     }
 
     public override string GetNodeData()

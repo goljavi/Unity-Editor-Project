@@ -11,6 +11,12 @@ public class OptionNode : BaseNode {
         text = EditorGUILayout.TextArea(text, GUILayout.Height(80));
     }
 
+    public override Color GetBackgroundColor()
+    {
+        windowColor = Color.red;
+        return windowColor;
+    }
+
     public override string GetNodeData()
     {
         return text;
