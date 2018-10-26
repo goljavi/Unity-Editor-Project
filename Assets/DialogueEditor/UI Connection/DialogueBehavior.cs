@@ -72,7 +72,7 @@ public class DialogueBehavior : MonoBehaviour
                 foreach (var diagObj2 in dialogueObjects)
                 {
                     //Busco la coincidencia entre el id del DialogueObject y el id de la referencia del option
-                    if (diagObj2.id == option.Value) optionIdToNextDialogue.Add(option.Key, diagObj2);
+                    if (diagObj2.id == option.Value) optionIdToNextDialogue[option.Key] = diagObj2;
                 }
             }
         }
