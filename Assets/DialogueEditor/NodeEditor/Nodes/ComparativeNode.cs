@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
-public class ComparativeNode : BaseNode, INeedsChildren, ISetableValues {
+public class ComparativeNode : BaseNode, INeedsChildren {
 
 	private BaseNode[] children = new BaseNode[2]; //Los nodos hijos a los que se va a elegir
 	private int[] childrenIDs = new int[2]; //IDs de los hijos para futura asignacion
@@ -18,12 +18,12 @@ public class ComparativeNode : BaseNode, INeedsChildren, ISetableValues {
 
 
 	//Valores con los que se van a comparar
-	private float[] comparedFloats = new float[2];
-	private int[] comparedInts = new int[2];
-	private bool comparedBool;
+	private string[] parameterNames = new string[2] { "", "" };
+	private Parameters parameterSource;
 
 	public override string GetNodeType { get { return "Comparison"; } }
 
+	public Parameters ParameterSource { get { return parameterSource; } set { parameterSource = value; } }
 
 	public override void DrawNode() {
 		activeType = (ComparisonType)EditorGUILayout.Popup((int)activeType,
@@ -93,26 +93,6 @@ public class ComparativeNode : BaseNode, INeedsChildren, ISetableValues {
 		return this;
 	}
 
-	#region ISetableValue asignacion de valores externos
-	public void SetFloat(int id, float value) {
-		if (ValidIndex(id))
-		{
-			comparedFloats[id] = value;
-		}
-	}
-
-	public void SetInt(int id, int value) {
-		if (ValidIndex(id))
-		{
-			comparedInts[id] = value;
-		}
-	}
-
-	public void SetBool(int id, bool value) {
-		comparedBool = value;
-	}
-	#endregion ISetableValue asignacion de valores externos
-
 	//Ejecuta la comparacion correspondiente
 	public bool Compare() {
 		switch (activeType)
@@ -122,7 +102,7 @@ public class ComparativeNode : BaseNode, INeedsChildren, ISetableValues {
 			case ComparisonType.Int:
 				return CompareInt();
 			case ComparisonType.Bool:
-				return comparedBool;
+				return parameterSource.GetBool(parameterNames[0]);
 			default:
 				Debug.LogWarning("Invalid Comparison Type Enum at " + this.ToString());
 				return false;
@@ -131,20 +111,23 @@ public class ComparativeNode : BaseNode, INeedsChildren, ISetableValues {
 
 	//Comparacion de floats
 	private bool CompareFloat() {
+
+		float float1 = parameterSource.GetFloat(parameterNames[0]);
+		float float2 = parameterSource.GetFloat(parameterNames[1]);
 		switch (activeOperator)
 		{
 			case ComparisonOperator.Equals:
-				return comparedFloats[0] == comparedFloats[1];
+				return float1 == float2;
 			case ComparisonOperator.NotEqual:
-				return !(comparedFloats[0] == comparedFloats[1]);
+				return !(float1 == float2);
 			case ComparisonOperator.Lesser:
-				return comparedFloats[0] < comparedFloats[1];
+				return float1 < float2;
 			case ComparisonOperator.LesserEquals:
-				return comparedFloats[0] <= comparedFloats[1];
+				return float1 <= float2;
 			case ComparisonOperator.Greater:
-				return comparedFloats[0] > comparedFloats[1];
+				return float1 > float2;
 			case ComparisonOperator.GreaterEquals:
-				return comparedFloats[0] >= comparedFloats[1];
+				return float1 >= float2;
 			default:
 				Debug.LogWarning("Invalid Comparison Operator Enum at " + this.ToString());
 				return false;
@@ -153,20 +136,22 @@ public class ComparativeNode : BaseNode, INeedsChildren, ISetableValues {
 
 	//comparacion de ints
 	private bool CompareInt() {
+		float int1 = parameterSource.GetInt(parameterNames[0]);
+		float int2 = parameterSource.GetInt(parameterNames[1]);
 		switch (activeOperator)
 		{
 			case ComparisonOperator.Equals:
-				return comparedInts[0] == comparedInts[1];
+				return int1 == int2;
 			case ComparisonOperator.NotEqual:
-				return !(comparedInts[0] == comparedInts[1]);
+				return !(int1 == int2);
 			case ComparisonOperator.Lesser:
-				return comparedInts[0] < comparedInts[1];
+				return int1 < int2;
 			case ComparisonOperator.LesserEquals:
-				return comparedInts[0] <= comparedInts[1];
+				return int1 <= int2;
 			case ComparisonOperator.Greater:
-				return comparedInts[0] > comparedInts[1];
+				return int1 > int2;
 			case ComparisonOperator.GreaterEquals:
-				return comparedInts[0] >= comparedInts[1];
+				return int1 >= int2;
 			default:
 				Debug.LogWarning("Invalid Comparison Operator Enum at " + this.ToString());
 				return false;
@@ -181,9 +166,7 @@ public class ComparativeNode : BaseNode, INeedsChildren, ISetableValues {
 		childrenIDs = converted.childrenIDs;
 		activeType = converted.comparisonType;
 		activeOperator = converted.comparisonOperator;
-		comparedFloats = converted.floatValues;
-		comparedInts = converted.intValues;
-		comparedBool = converted.boolValue;
+		parameterNames = converted.parameterName;
 	}
 
 	public override string GetNodeData() {
@@ -196,9 +179,7 @@ public class ComparativeNode : BaseNode, INeedsChildren, ISetableValues {
 			},
 			comparisonType = activeType,
 			comparisonOperator = activeOperator,
-			floatValues = new float[2] { comparedFloats[0], comparedFloats[1] },
-			intValues = new int[] { comparedInts[0], comparedInts[1] },
-			boolValue = comparedBool
+			parameterName = parameterNames
 		});
 	}
 
@@ -210,9 +191,7 @@ public struct ComparativeNodeData {
 	public int[] childrenIDs;
 	public ComparativeNode.ComparisonType comparisonType;
 	public ComparativeNode.ComparisonOperator comparisonOperator;
-	public float[] floatValues;
-	public int[] intValues;
-	public bool boolValue;
+	public string[] parameterName;
 }
 
 

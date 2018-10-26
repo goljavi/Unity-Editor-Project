@@ -32,6 +32,12 @@ public class DialogueEditor : EditorWindow {
      */
     List<int> _idList = new List<int>();
 
+	//Estos son los parametros que los nodos comparativos van a usar. 
+	//Los valores que guarda son los definidos por defecto
+	//En runtime va a usar una copia de esta clase para no modificar el archivo.
+	//TODO: Implemetar a esta clase, hacer que se serialize
+	Parameters _fileParameters;
+
     //En este enum están todas las posibles acciones a las que se puede llamar
     //haciendo click derecho en el editor ya sea en un nodo individual o no.
     public enum UserActions
