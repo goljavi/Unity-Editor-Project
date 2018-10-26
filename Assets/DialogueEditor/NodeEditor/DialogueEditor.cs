@@ -35,8 +35,8 @@ public class DialogueEditor : EditorWindow {
 	//Estos son los parametros que los nodos comparativos van a usar. 
 	//Los valores que guarda son los definidos por defecto
 	//En runtime va a usar una copia de esta clase para no modificar el archivo.
-	//TODO: Implemetar a esta clase, hacer que se serialize
-	Parameters _fileParameters;
+	//TODO: Implemetar en esta clase
+	Parameters _fileParameters = new Parameters();
 
     //En este enum están todas las posibles acciones a las que se puede llamar
     //haciendo click derecho en el editor ya sea en un nodo individual o no.
@@ -66,6 +66,9 @@ public class DialogueEditor : EditorWindow {
     public void LoadAssetFile(DialogueNodeMap assetFile)
     {
         _assetFile = assetFile;
+
+		//Se carga la data de los parametros
+		_fileParameters.SetData(_assetFile.parameters);
 
         //Se borran las listas en caso de que haya información anterior no deseada
         _nodes.Clear();
@@ -148,6 +151,9 @@ public class DialogueEditor : EditorWindow {
     //y se guarda en una lista en el objeto serializado (de tipo "DialogueNodeMap")
     public void SaveAssetFile()
     {
+		//Guarda la data de parametros
+		_assetFile.parameters = _fileParameters.GetData();
+
         //Borro cualquier información previamente guardada en el archivo
         _assetFile.nodes.Clear();
 
@@ -170,7 +176,6 @@ public class DialogueEditor : EditorWindow {
 					windowTitle = node.windowTitle,
 					data = node.GetNodeData(),
 					nodeType = node.GetNodeType
-
                 }
             );
         }

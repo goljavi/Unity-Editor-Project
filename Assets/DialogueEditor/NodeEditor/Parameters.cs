@@ -166,7 +166,7 @@ public class Parameters {
 	}
 
 	//Obtener data serializada
-	public string GetData() {
+	public ParametersData GetData() {
 		//int
 		List<string> intN = new List<string>();
 		List<int> intV = new List<int>();
@@ -194,7 +194,7 @@ public class Parameters {
 			boolV.Add(item.Value);
 		}
 
-		return JsonUtility.ToJson(new ParametersData
+		return new ParametersData
 		{
 			intNames = intN,
 			intValues = intV,
@@ -202,32 +202,42 @@ public class Parameters {
 			floatValues = floatV,
 			boolNames = boolN,
 			boolValues = boolV
-		});
+		};
+	}
+
+	//Obtener data como Json
+	public string GetJsonData() {
+		return JsonUtility.ToJson(GetData());
+	}
+
+	//asignar data a partir de la clase de data
+	public void SetData(string data) {
+		ParametersData converted = JsonUtility.FromJson<ParametersData>(data);
+		SetData(converted);
 	}
 
 	//Asignar data a partir de data serializada
-	public void SetData(string data) {
-		ParametersData converted = JsonUtility.FromJson<ParametersData>(data);
+	public void SetData(ParametersData data) {
 		//ints
 		intParameters.Clear();
-		int c = converted.intNames.Count <= converted.intValues.Count ?
-			converted.intNames.Count : converted.intValues.Count; //uses minimum count in case of disparity
+		int c = data.intNames.Count <= data.intValues.Count ?
+			data.intNames.Count : data.intValues.Count; //uses minimum count in case of disparity
 		for (int i = 0; i < c; i++)
-			intParameters.Add(converted.intNames[i], converted.intValues[i]);
+			intParameters.Add(data.intNames[i], data.intValues[i]);
 
 		//floats
 		floatParameters.Clear();
-		c = converted.floatNames.Count <= converted.floatValues.Count ?
-			converted.floatNames.Count : converted.floatValues.Count; //uses minimum count in case of disparity
+		c = data.floatNames.Count <= data.floatValues.Count ?
+			data.floatNames.Count : data.floatValues.Count; //uses minimum count in case of disparity
 		for (int i = 0; i < c; i++)
-			floatParameters.Add(converted.floatNames[i], converted.floatValues[i]);
+			floatParameters.Add(data.floatNames[i], data.floatValues[i]);
 
 		//bools
 		boolParameters.Clear();
-		c = converted.boolNames.Count <= converted.boolValues.Count ?
-			converted.boolNames.Count : converted.boolValues.Count; //uses minimum count in case of disparity
+		c = data.boolNames.Count <= data.boolValues.Count ?
+			data.boolNames.Count : data.boolValues.Count; //uses minimum count in case of disparity
 		for (int i = 0; i < c; i++)
-			boolParameters.Add(converted.boolNames[i], converted.boolValues[i]);
+			boolParameters.Add(data.boolNames[i], data.boolValues[i]);
 	}
 }
 
