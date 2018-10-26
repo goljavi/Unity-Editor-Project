@@ -4,42 +4,39 @@ using UnityEngine;
 using UnityEditor;
 
 public class OptionNode : BaseNode {
-    public string text;
+	public string text;
 
-    public override void DrawNode()
-    {
-        EditorStyles.textArea.wordWrap = true;
-        var textValue = EditorGUILayout.TextArea(text, EditorStyles.textArea, GUILayout.Height(80));
-        if (textValue != text)
-        {
-            text = textValue;
-            reference.NotifyChangesWereMade();
-        }
-    }
+	public override string GetNodeType { get { return "Option"; } }
 
-    public override Color GetBackgroundColor()
-    {
-        return Color.red;
-    }
+	public override void DrawNode() {
+		EditorStyles.textArea.wordWrap = true;
+		var textValue = EditorGUILayout.TextArea(text, EditorStyles.textArea, GUILayout.Height(80));
+		if (textValue != text)
+		{
+			text = textValue;
+			reference.NotifyChangesWereMade();
+		}
+	}
 
-    public override string GetNodeData()
-    {
-        return text;
-    }
+	public override Color GetBackgroundColor() {
+		return Color.red;
+	}
 
-    public override void SetNodeData(string data)
-    {
-        text = data;
-    }
+	public override string GetNodeData() {
+		return text;
+	}
 
-    public override void DrawConnection()
-    {
-        if (parents.Count > 0)
-        {
-            foreach (var parent in parents)
-            {
-                if (parent != null) DialogueEditor.DrawNodeConnection(parent.windowRect, windowRect, true, Color.black);
-            }
-        }
-    }
+	public override void SetNodeData(string data) {
+		text = data;
+	}
+
+	public override void DrawConnection() {
+		if (parents.Count > 0)
+		{
+			foreach (var parent in parents)
+			{
+				if (parent != null) DialogueEditor.DrawNodeConnection(parent.windowRect, windowRect, true, Color.black);
+			}
+		}
+	}
 }

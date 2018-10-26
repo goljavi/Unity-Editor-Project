@@ -12,113 +12,25 @@ MonoBehaviour:
   m_Name: TestDialogue 1
   m_EditorClassIdentifier: 
   nodes:
-  - id: 2340
+  - id: 5515
     parentIds: 
     windowRect:
       serializedVersion: 2
-      x: 182
-      y: 96
+      x: 541
+      y: 209
+      width: 100
+      height: 100
+    windowTitle: Comparison
+    data: '{"childrenIDs":[-1,-1],"comparisonType":2,"comparisonOperator":0,"floatValues":[0.0,0.0],"intValues":[0,0],"boolValue":false}'
+    nodeType: Comparison
+  - id: 3521
+    parentIds: 
+    windowRect:
+      serializedVersion: 2
+      x: 312
+      y: 209
       width: 100
       height: 100
     windowTitle: Start
     data: 
-  - id: 7974
-    parentIds: 24090000
-    windowRect:
-      serializedVersion: 2
-      x: 367
-      y: 45
-      width: 200
-      height: 130
-    windowTitle: Dialogue
-    data: Hola Viajero! En que puedo ayudarte?
-  - id: 9571
-    parentIds: 261f0000
-    windowRect:
-      serializedVersion: 2
-      x: 632
-      y: 49
-      width: 200
-      height: 130
-    windowTitle: Option
-    data: "Sabes donde est\xE1 la ciudad mas cercana?"
-  - id: 9791
-    parentIds: 261f0000
-    windowRect:
-      serializedVersion: 2
-      x: 630
-      y: 210
-      width: 200
-      height: 130
-    windowTitle: Option
-    data: "Un mago? Pens\xE9 que esas cosas solo existian en las peliculas"
-  - id: 4189
-    parentIds: 3f260000
-    windowRect:
-      serializedVersion: 2
-      x: 937
-      y: 220
-      width: 200
-      height: 130
-    windowTitle: Dialogue
-    data: JAJAJ
-  - id: 7377
-    parentIds: 5d100000
-    windowRect:
-      serializedVersion: 2
-      x: 1000
-      y: 381
-      width: 200
-      height: 130
-    windowTitle: Option
-    data: "De que te re\xEDs?"
-  - id: 1134
-    parentIds: d11c0000
-    windowRect:
-      serializedVersion: 2
-      x: 1021
-      y: 555
-      width: 200
-      height: 130
-    windowTitle: Dialogue
-    data: De nada ;)
-  - id: 9832
-    parentIds: 
-    windowRect:
-      serializedVersion: 2
-      x: 1349
-      y: 233
-      width: 100
-      height: 100
-    windowTitle: End
-    data: 
-  - id: 8858
-    parentIds: 6e04000068260000
-    windowRect:
-      serializedVersion: 2
-      x: 1294
-      y: 572
-      width: 200
-      height: 130
-    windowTitle: Option
-    data: '...'
-  - id: 5038
-    parentIds: 63250000
-    windowRect:
-      serializedVersion: 2
-      x: 864
-      y: 49
-      width: 200
-      height: 130
-    windowTitle: Dialogue
-    data: No
-  - id: 8341
-    parentIds: ae13000068260000
-    windowRect:
-      serializedVersion: 2
-      x: 1100
-      y: 51
-      width: 200
-      height: 130
-    windowTitle: Option
-    data: '....'
+    nodeType: Start

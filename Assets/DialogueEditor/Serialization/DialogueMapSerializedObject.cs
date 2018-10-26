@@ -12,4 +12,5 @@ public class DialogueMapSerializedObject {
     public Rect windowRect;
     public string windowTitle;
     public string data;
+	public string nodeType;
 }
