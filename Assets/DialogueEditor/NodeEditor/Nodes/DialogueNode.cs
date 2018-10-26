@@ -38,7 +38,6 @@ public class DialogueNode : BaseNode {
         {
             foreach (var parent in parents)
             {
-                Debug.Log(parent);
                 if (parent != null) DialogueEditor.DrawNodeConnection(parent.windowRect, windowRect, true, Color.black);
             }
         }
