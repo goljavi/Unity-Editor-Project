@@ -11,6 +11,7 @@ public class DialogueEditor : EditorWindow {
     //Aca se guardan las variables de la toolbar
     private GUIStyle myStyle;
     private float toolbarHeight = 100;
+    private bool changesMade = false;
 
     private Vector2 graphPan;
     private Rect graphRect;
@@ -172,12 +173,30 @@ public class DialogueEditor : EditorWindow {
 
         //Esto no sé bien que hace pero se solucionó un bug usandolo.
         EditorUtility.SetDirty(_assetFile);
+
+        changesMade = false;
     }
     #endregion
 
     #region DIBUJADO DE LOS NODOS Y REGISTRO DE INPUT
-        //Es el update del EditorWindow
-        private void OnGUI()
+    //Es el update del EditorWindow
+    private void OnGUI()
+    {
+        //Logeo la posición del mouse
+        Event e = Event.current;
+        _mousePosition = e.mousePosition;
+
+        //Registro si hizo click izquierdo o derecho
+        UserInput(e);
+
+        //Dibujo los nodos sobre la ventana
+        DrawNodes();
+
+        //Dibujo la Toolbar despues de los nodos para que los tape
+        DrawToolbar();
+    }
+
+    void DrawToolbar()
     {
         //Estos son los valores del GUIStyle
         var mySelf = GetWindow<DialogueEditor>();
@@ -186,37 +205,26 @@ public class DialogueEditor : EditorWindow {
         mySelf.myStyle.alignment = TextAnchor.MiddleCenter;
         mySelf.myStyle.fontStyle = FontStyle.BoldAndItalic;
 
-        //Logeo la posición del mouse
-        Event e = Event.current;
-   
-        _mousePosition = e.mousePosition;
-
-
-        //Registro si hizo click izquierdo o derecho
-        UserInput(e);
-
-        //Dibujo los nodos sobre la ventana
-        DrawNodes();
-
-        //Guardo la información registrada hasta el momento
-        SaveAssetFile();
-
-
         //Esta es la Toolbar con el titulo y el boton *De momento no hace nada*
-        EditorGUI.DrawRect(new Rect(0,0,position.width,toolbarHeight), Color.gray);
+        EditorGUI.DrawRect(new Rect(0, 0, position.width, toolbarHeight), Color.gray);
         EditorGUILayout.BeginVertical(GUILayout.Height(100));
         EditorGUILayout.LabelField("Dialogue Editor", myStyle, GUILayout.Height(50));
         EditorGUILayout.Space();
         EditorGUILayout.BeginHorizontal();
+
+        if (changesMade) GUI.backgroundColor = Color.cyan;
+        else GUI.backgroundColor = Color.white;
+
         if (GUILayout.Button("Save map", GUILayout.Width(150), GUILayout.Height(30)))
-            //Agregar función para el boton...
-
-            EditorGUILayout.EndHorizontal();
+        {
+            //Guardo la información registrada hasta el momento
+            SaveAssetFile();
+        }
+            
+        EditorGUILayout.EndHorizontal();
         EditorGUILayout.EndVertical();
-
         graphRect.x = graphPan.x;
         graphRect.y = graphPan.y;
-        
     }
 
 
@@ -441,6 +449,8 @@ public class DialogueEditor : EditorWindow {
             default:
                 break;
         }
+
+        NotifyChangesWereMade();
     }
 
     //Borra el nodo seleccionado
@@ -568,6 +578,11 @@ public class DialogueEditor : EditorWindow {
         do{ randomNumber = Random.Range(0, 10000); } while (_idList.Contains(randomNumber));
         _idList.Add(randomNumber);
         return randomNumber;
+    }
+
+    public void NotifyChangesWereMade()
+    {
+        changesMade = true;
     }
     #endregion
 }

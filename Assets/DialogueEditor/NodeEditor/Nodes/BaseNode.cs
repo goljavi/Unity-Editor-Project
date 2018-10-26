@@ -14,7 +14,6 @@ public abstract class BaseNode {
     //Estas variables las pide GUI.Window()
     public Rect windowRect;
     public string windowTitle;
-    public Color windowColor;
 
     //Guardo la referencia a la ventana de nodos en caso de que el nodo necesite llamar a algún metodo de esta
     public DialogueEditor reference;
@@ -22,6 +21,7 @@ public abstract class BaseNode {
     //Estas funciones son llamadas por la ventana de nodos para que cada nodo dibuje su contenido y sus conexiones
 	public virtual void DrawNode() { }
     public virtual void DrawConnection() { }
+    public virtual Color GetBackgroundColor(){ return Color.white; }
 
     /* Cada nodo sabe cual es la data que contiene y por lo tanto tiene que saber como serializarla y deserializarla
      * ya que necesitamos un medio generico por el cual información que de otra forma, es extremadamente variada
@@ -58,11 +58,5 @@ public abstract class BaseNode {
     {
         parents.Add(value);
         return this;
-    }
-
-    public virtual Color GetBackgroundColor()
-    {
-        windowColor = Color.white;
-        return windowColor;
     }
 }

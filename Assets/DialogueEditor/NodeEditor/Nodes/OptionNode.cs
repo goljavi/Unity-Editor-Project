@@ -8,13 +8,18 @@ public class OptionNode : BaseNode {
 
     public override void DrawNode()
     {
-        text = EditorGUILayout.TextArea(text, GUILayout.Height(80));
+        EditorStyles.textArea.wordWrap = true;
+        var textValue = EditorGUILayout.TextArea(text, EditorStyles.textArea, GUILayout.Height(80));
+        if (textValue != text)
+        {
+            text = textValue;
+            reference.NotifyChangesWereMade();
+        }
     }
 
     public override Color GetBackgroundColor()
     {
-        windowColor = Color.red;
-        return windowColor;
+        return Color.red;
     }
 
     public override string GetNodeData()
@@ -31,7 +36,7 @@ public class OptionNode : BaseNode {
     {
         if (parents.Count > 0)
         {
-            foreach(var parent in parents)
+            foreach (var parent in parents)
             {
                 if (parent != null) DialogueEditor.DrawNodeConnection(parent.windowRect, windowRect, true, Color.black);
             }

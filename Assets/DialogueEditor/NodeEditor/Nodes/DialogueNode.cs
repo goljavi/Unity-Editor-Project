@@ -6,17 +6,20 @@ using UnityEditor;
 public class DialogueNode : BaseNode {
     public string text;
 
-
     public override void DrawNode()
     {
         EditorStyles.textArea.wordWrap = true;
-        text = EditorGUILayout.TextArea(text, EditorStyles.textArea ,GUILayout.Height(80));      
+        var textValue = EditorGUILayout.TextArea(text, EditorStyles.textArea ,GUILayout.Height(80));
+        if (textValue != text)
+        {
+            text = textValue;
+            reference.NotifyChangesWereMade();
+        }
     }
 
     public override Color GetBackgroundColor()
     {
-        windowColor = Color.green;
-        return windowColor;
+        return Color.green;
     }
 
     public override string GetNodeData()
@@ -35,7 +38,7 @@ public class DialogueNode : BaseNode {
         {
             foreach (var parent in parents)
             {
-                if(parent != null) DialogueEditor.DrawNodeConnection(parent.windowRect, windowRect, true, Color.black);
+                if (parent != null) DialogueEditor.DrawNodeConnection(parent.windowRect, windowRect, true, Color.black);
             }
         }
     }
