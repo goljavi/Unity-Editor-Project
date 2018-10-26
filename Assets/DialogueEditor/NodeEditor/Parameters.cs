@@ -8,7 +8,7 @@ public class Parameters {
 	private Dictionary<string, float> floatParameters = new Dictionary<string, float>();
 	private Dictionary<string, bool> boolParameters = new Dictionary<string, bool>();
 
-	//properties
+	//Lista de nombres de parametros de cada tipo
 	public List<string> IntParametersNames {
 		get
 		{
@@ -28,7 +28,10 @@ public class Parameters {
 		}
 	}
 
-	//Get value return
+	public enum ParameterType { Int, Float, Bool };
+
+	//Devolver el valor dado el nombre del parametro
+	//Si se necesita verificar si se obtuvo un valor valido, usar el que tiene "out bool"
 	//int
 	public int GetInt(string parameterName, out bool success) {
 		if (intParameters.ContainsKey(parameterName))
@@ -80,7 +83,7 @@ public class Parameters {
 		return (GetBool(parameterName, out voidVar));
 	}
 
-	//default parameters properties
+	//Devuelve un parametro predeterminado, si existen
 	public string DefaultIntName {
 		get
 		{
@@ -106,7 +109,7 @@ public class Parameters {
 		}
 	}
 
-	//Add parameter
+	//Crear un parametro
 	public void AddInt(string name) {
 		if (!intParameters.ContainsKey(name))
 			intParameters.Add(name, 0);
@@ -120,7 +123,7 @@ public class Parameters {
 			boolParameters.Add(name, false);
 	}
 
-	//Set parameter
+	//Asignar un parametro
 	public void SetInt(string name, int value) {
 		if (intParameters.ContainsKey(name))
 			intParameters[name] = value;
@@ -134,7 +137,35 @@ public class Parameters {
 			boolParameters[name] = value;
 	}
 
-	//get serialized data
+	//Renombrar un parametro
+	public void RenameParameter(string oldName, string newName, ParameterType type) {
+		switch (type)
+		{
+			case ParameterType.Int:
+				if (intParameters.ContainsKey(oldName))
+				{
+					intParameters[newName] = intParameters[oldName];
+					intParameters.Remove(oldName);
+				}
+				break;
+			case ParameterType.Float:
+				if (floatParameters.ContainsKey(oldName))
+				{
+					floatParameters[newName] = floatParameters[oldName];
+					floatParameters.Remove(oldName);
+				}
+				break;
+			case ParameterType.Bool:
+				if (boolParameters.ContainsKey(oldName))
+				{
+					boolParameters[newName] = boolParameters[oldName];
+					boolParameters.Remove(oldName);
+				}
+				break;
+		}
+	}
+
+	//Obtener data serializada
 	public string GetData() {
 		//int
 		List<string> intN = new List<string>();
@@ -174,7 +205,7 @@ public class Parameters {
 		});
 	}
 
-	//set serialized data
+	//Asignar data a partir de data serializada
 	public void SetData(string data) {
 		ParametersData converted = JsonUtility.FromJson<ParametersData>(data);
 		//ints
