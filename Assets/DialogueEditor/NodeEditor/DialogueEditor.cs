@@ -11,7 +11,7 @@ public class DialogueEditor : EditorWindow {
     //Aca se guardan las variables de la toolbar
     private GUIStyle myStyle;
     private float toolbarHeight = 100;
-    private bool changesMade = false;
+    private bool changesMade;
 
     private Vector2 graphPan;
     private Rect graphRect;
@@ -70,6 +70,7 @@ public class DialogueEditor : EditorWindow {
      */
     public void LoadAssetFile(DialogueNodeMap assetFile)
     {
+        changesMade = false;
         _assetFile = assetFile;
 
         //Se borran las listas en caso de que haya información anterior no deseada
@@ -205,7 +206,7 @@ public class DialogueEditor : EditorWindow {
         mySelf.myStyle.alignment = TextAnchor.MiddleCenter;
         mySelf.myStyle.fontStyle = FontStyle.BoldAndItalic;
 
-        //Esta es la Toolbar con el titulo y el boton *De momento no hace nada*
+        //Esta es la Toolbar con el titulo y el boton
         EditorGUI.DrawRect(new Rect(0, 0, position.width, toolbarHeight), Color.gray);
         EditorGUILayout.BeginVertical(GUILayout.Height(100));
         EditorGUILayout.LabelField("Dialogue Editor", myStyle, GUILayout.Height(50));
@@ -220,7 +221,14 @@ public class DialogueEditor : EditorWindow {
             //Guardo la información registrada hasta el momento
             SaveAssetFile();
         }
-            
+
+        GUI.backgroundColor = Color.white;
+        if (GUILayout.Button("Discard changes", GUILayout.Width(150), GUILayout.Height(30)))
+        {
+            //Guardo la información registrada hasta el momento
+            LoadAssetFile(_assetFile);
+        }
+
         EditorGUILayout.EndHorizontal();
         EditorGUILayout.EndVertical();
         graphRect.x = graphPan.x;
@@ -487,6 +495,11 @@ public class DialogueEditor : EditorWindow {
         }   
     }
 
+    public bool NodeExists(BaseNode node)
+    {
+        return _nodes.Contains(node);
+    }
+
     //Crea el StartNode
     public StartNode AddStartNode(Rect rect, int id)
     {
@@ -509,7 +522,10 @@ public class DialogueEditor : EditorWindow {
     public DialogueNode AddDialogueNode(Rect rect, int id, BaseNode parent = null)
     {
         DialogueNode dialogueNode = new DialogueNode();
-        dialogueNode.SetWindowRect(rect).SetWindowTitle("Dialogue").SetParent(parent).SetId(id).SetReference(this);
+        dialogueNode.SetWindowRect(rect).SetWindowTitle("Dialogue").SetId(id).SetReference(this);
+
+        if (NodeExists(parent)) dialogueNode.SetParent(parent);
+
         _nodes.Add(dialogueNode);
         return dialogueNode;
     }
@@ -518,7 +534,10 @@ public class DialogueEditor : EditorWindow {
     public OptionNode AddOptionNode(Rect rect, int id, DialogueNode parent = null)
     {
         OptionNode optionNode = new OptionNode();
-        optionNode.SetWindowRect(rect).SetWindowTitle("Option").SetParent(parent).SetId(id).SetReference(this);
+        optionNode.SetWindowRect(rect).SetWindowTitle("Option").SetId(id).SetReference(this);
+
+        if (NodeExists(parent)) optionNode.SetParent(parent);
+
         _nodes.Add(optionNode);
         return optionNode;
     }
