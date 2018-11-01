@@ -8,6 +8,9 @@ using UnityEngine;
 public abstract class BaseNode {
 	public int id;
 
+    public Color color;
+    public Color defaultColor;
+
 	//Guardamos los nodos que sean padres de este nodo
 	public List<BaseNode> parents = new List<BaseNode>();
 
@@ -38,10 +41,10 @@ public abstract class BaseNode {
 
 	public virtual Color GetBackgroundColor() { return Color.white; }
 
-	/* Cada nodo sabe cual es la data que contiene y por lo tanto tiene que saber como serializarla y deserializarla
+    /* Cada nodo sabe cual es la data que contiene y por lo tanto tiene que saber como serializarla y deserializarla
      * ya que necesitamos un medio generico por el cual información que de otra forma, es extremadamente variada
      * Por lo tanto al setear u obtener la información que contiene dentro el nodo, la misma se pasa a través de JSON */
-	public virtual void SetNodeData(string data) { }
+    public virtual void SetNodeData(string data) { }
 	public virtual string GetNodeData() { return ""; }
 
 	//Builder

@@ -20,6 +20,14 @@ public class DialogueEditor : EditorWindow {
     Vector2 _scrollPos;
     Vector2 _scrollStartPos;
 
+    //Variables para la grilla
+    private UnityEditor.Graphs.Graph graph;
+    private GraphGUITest graphGUI;
+
+    class GraphGUITest : UnityEditor.Graphs.GraphGUI
+    {
+    }
+
     //Acá se guardan los nodos que se muestran en la ventana. Esta lista se muestra en cada OnGUI() -> DrawNodes()
     List<BaseNode> _nodes = new List<BaseNode>();
 
@@ -32,6 +40,9 @@ public class DialogueEditor : EditorWindow {
      */
     BaseNode _lastRightClickedNode;
     BaseNode _lastLeftClickedNode;
+
+    //Bool para saber si el nodo está focuseado
+    bool _focusedNode;
 
     //Contiene la referencia al archivo en el cual se está serializando la información
     DialogueNodeMap _assetFile;
@@ -60,8 +71,8 @@ public class DialogueEditor : EditorWindow {
         addOptionNode,
         deleteNode,
         addConnection,
-	addComparisonNode,
-	addConnectionAsFalse,
+	    addComparisonNode,
+	    addConnectionAsFalse,
         resetScroll
     }
     #endregion
@@ -202,9 +213,19 @@ public class DialogueEditor : EditorWindow {
     #endregion
 
     #region DIBUJADO DE LOS NODOS Y REGISTRO DE INPUT
+
+    private void OnEnable()
+    {
+        graph = CreateInstance<UnityEditor.Graphs.Graph>();
+        graphGUI = CreateInstance<GraphGUITest>();
+        graphGUI.graph = graph;
+    }
+
     //Es el update del EditorWindow
     private void OnGUI()
     {
+
+
         //Logeo la posición del mouse
         Event e = Event.current;
         _mousePosition = e.mousePosition;
@@ -212,14 +233,20 @@ public class DialogueEditor : EditorWindow {
         //Registro si hizo click izquierdo o derecho
         UserInput(e);
 
+        graphGUI.BeginGraphGUI(this, new Rect(0f, 0f, position.width, position.height));
+
+        graphGUI.EndGraphGUI();
+
         //Dibujo los nodos sobre la ventana
         DrawNodes();
 
         //Dibujo la Toolbar despues de los nodos para que los tape
-        DrawToolbar();
+        DrawToolbar();       
 
         //Guardo la información registrada hasta el momento
         SaveAssetFile();
+
+        PaintNode();
     }
 
     void DrawToolbar()
@@ -316,10 +343,12 @@ public class DialogueEditor : EditorWindow {
         if (e.type == EventType.MouseDown)
         {
             var clickedOnNode = false;
+            _focusedNode = false;
 
             //Por cada nodo mostrado en ventana
             for (int i = 0; i < _nodes.Count; i++)
-            {
+            {               
+
                 if (e.button == 2)
                 {
                     _scrollStartPos = e.mousePosition;
@@ -330,12 +359,13 @@ public class DialogueEditor : EditorWindow {
                 {
                     //Hizo click en un nodo!
                     clickedOnNode = true;
+                    _focusedNode = true;
 
                     //Si hizo click izquierdo
                     if (e.button == 0)
                     {
                         //Logeo a ese nodo como el ultimo en el que se hizo click izquierdo
-                        _lastLeftClickedNode = _nodes[i];
+                        _lastLeftClickedNode = _nodes[i];                       
                     }
                     //Si hizo click derecho
                     else if (e.button == 1)
@@ -382,6 +412,24 @@ public class DialogueEditor : EditorWindow {
             b.windowRect.y -= _scrollPos.y;
         }
         _scrollPos = Vector2.zero;
+    }
+
+
+    //FUNCIÓN PARA PINTAR LOS NODOS
+    void PaintNode()
+    {
+        for (int i = 0; i < _nodes.Count; i++)
+        {
+            BaseNode b = _nodes[i];
+            if (_lastLeftClickedNode == b && _focusedNode == true)
+            {
+                b.color = Color.cyan;
+            }
+            else
+            {
+                b.color = b.defaultColor;
+            }
+        }
     }
 
     //Esta función se encarga de llamar a las funciones que hacen los menues contextuales

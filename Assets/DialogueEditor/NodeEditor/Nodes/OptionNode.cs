@@ -5,6 +5,7 @@ using UnityEditor;
 
 public class OptionNode : BaseNode {
 	public string text;
+    
 
 	public override string GetNodeType { get { return "Option"; } }
 
@@ -19,10 +20,13 @@ public class OptionNode : BaseNode {
 	}
 
 	public override Color GetBackgroundColor() {
-		return Color.red;
-	}
 
-	public override string GetNodeData() {
+        defaultColor = Color.red;
+        return color;
+    }
+
+
+    public override string GetNodeData() {
 		return text;
 	}
 

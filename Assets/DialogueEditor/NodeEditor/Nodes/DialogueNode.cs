@@ -6,8 +6,10 @@ using UnityEditor;
 public class DialogueNode : BaseNode {
 	public string text;
 
-	public override string GetNodeType { get { return "Dialogue"; } }
-	public override void DrawNode() {
+    public override string GetNodeType { get { return "Dialogue"; } }
+
+    public override void DrawNode()
+    {
 		EditorStyles.textArea.wordWrap = true;
 		var textValue = EditorGUILayout.TextArea(text, EditorStyles.textArea, GUILayout.Height(80));
 		if (textValue != text)
@@ -18,10 +20,13 @@ public class DialogueNode : BaseNode {
 	}
 
 	public override Color GetBackgroundColor() {
-		return Color.green;
-	}
 
-	public override string GetNodeData() {
+        defaultColor = Color.green;
+        return color;
+    }
+
+
+    public override string GetNodeData() {
 		return text;
 	}
 

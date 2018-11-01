@@ -12,3 +12,10 @@ MonoBehaviour:
   m_Name: Holis
   m_EditorClassIdentifier: 
   nodes: []
+  parameters:
+    intNames: []
+    intValues: 
+    floatNames: []
+    floatValues: []
+    boolNames: []
+    boolValues: 
