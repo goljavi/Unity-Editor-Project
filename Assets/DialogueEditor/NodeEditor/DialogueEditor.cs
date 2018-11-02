@@ -159,7 +159,7 @@ public class DialogueEditor : EditorWindow {
                                  */
                                 node.SetParent(n);
 
-								if((INeedsChildren)n != null)
+								if(n as INeedsChildren != null)
 								{
 									((INeedsChildren)n).AssignChild(node, -1);
 								}
@@ -177,7 +177,7 @@ public class DialogueEditor : EditorWindow {
     public void SaveAssetFile()
     {
 		//Guarda la data de parametros
-		_assetFile.parameters = _fileParameters.GetData();
+		if(_fileParameters != null) _assetFile.parameters = _fileParameters.GetData();
 
         //Borro cualquier información previamente guardada en el archivo
         _assetFile.nodes.Clear();
@@ -243,9 +243,6 @@ public class DialogueEditor : EditorWindow {
         //Dibujo la Toolbar despues de los nodos para que los tape
         DrawToolbar();       
 
-        //Guardo la información registrada hasta el momento
-        SaveAssetFile();
-
         PaintNode();
     }
 
@@ -277,7 +274,7 @@ public class DialogueEditor : EditorWindow {
         GUI.backgroundColor = Color.white;
         if (GUILayout.Button("Discard changes", GUILayout.Width(150), GUILayout.Height(30)))
         {
-            //Guardo la información registrada hasta el momento
+            //Cargo la información registrada hasta el momento
             LoadAssetFile(_assetFile);
         }
 

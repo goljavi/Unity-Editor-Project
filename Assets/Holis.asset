@@ -11,7 +11,40 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf7da5580a288c740aa183663abb9b21, type: 3}
   m_Name: Holis
   m_EditorClassIdentifier: 
-  nodes: []
+  nodes:
+  - id: 9666
+    parentIds: 
+    windowRect:
+      serializedVersion: 2
+      x: 376
+      y: 246
+      width: 100
+      height: 100
+    windowTitle: Start
+    data: 
+    nodeType: Start
+  - id: 1928
+    parentIds: 
+    windowRect:
+      serializedVersion: 2
+      x: 645
+      y: 234
+      width: 200
+      height: 130
+    windowTitle: Dialogue
+    data: 
+    nodeType: Dialogue
+  - id: 4139
+    parentIds: 88070000
+    windowRect:
+      serializedVersion: 2
+      x: 1061
+      y: 230
+      width: 200
+      height: 130
+    windowTitle: Option
+    data: 
+    nodeType: Option
   parameters:
     intNames: []
     intValues: 

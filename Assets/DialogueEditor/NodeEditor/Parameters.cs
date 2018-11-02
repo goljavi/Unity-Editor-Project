@@ -218,6 +218,7 @@ public class Parameters {
 
 	//Asignar data a partir de data serializada
 	public void SetData(ParametersData data) {
+        if (data.intNames == null) return;
 		//ints
 		intParameters.Clear();
 		int c = data.intNames.Count <= data.intValues.Count ?
