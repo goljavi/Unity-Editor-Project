@@ -5,6 +5,7 @@ using UnityEngine;
 public class DialogueObject {
     public int id;
     public string dialogue;
+    public float delay;
     public Dictionary<int, int> optionsLinks = new Dictionary<int, int>();
     public Dictionary<int, string> options = new Dictionary<int, string>();
 }

@@ -69,6 +69,8 @@ public class DialogueEditor : EditorWindow {
         addEndNode,
         addDialogueNode,
         addOptionNode,
+        addDelayNode,
+        addFunctionNode,
         deleteNode,
         addConnection,
 	    addComparisonNode,
@@ -451,6 +453,8 @@ public class DialogueEditor : EditorWindow {
         //AddItem pide una función y un parametro para pasarle si se hace click en el item
         menu.AddItem(new GUIContent("Add Start"), false, ContextMenuActions, UserActions.addStartNode);
         menu.AddItem(new GUIContent("Add Dialogue"), false, ContextMenuActions, UserActions.addDialogueNode);
+        menu.AddItem(new GUIContent("Add Function"), false, ContextMenuActions, UserActions.addFunctionNode);
+        menu.AddItem(new GUIContent("Add Delay"), false, ContextMenuActions, UserActions.addDelayNode);
         menu.AddItem(new GUIContent("Add End"), false, ContextMenuActions, UserActions.addEndNode);
 		menu.AddItem(new GUIContent("Add Comparison"), false, ContextMenuActions, UserActions.addComparisonNode);
 
@@ -492,6 +496,18 @@ public class DialogueEditor : EditorWindow {
 			menu.AddItem(new GUIContent("Add Dialogue"), false, ContextMenuActions, UserActions.addDialogueNode);
 			menu.AddItem(new GUIContent("Delete"), false, ContextMenuActions, UserActions.deleteNode);
 		}
+        else if (_lastRightClickedNode is FunctionNode)
+        {
+            menu.AddItem(new GUIContent("Add Connection (with focused node)"), false, ContextMenuActions, UserActions.addConnection);
+            menu.AddItem(new GUIContent("Add Dialogue"), false, ContextMenuActions, UserActions.addDialogueNode);
+            menu.AddItem(new GUIContent("Delete"), false, ContextMenuActions, UserActions.deleteNode);
+        }
+        else if (_lastRightClickedNode is DelayNode)
+        {
+            menu.AddItem(new GUIContent("Add Connection (with focused node)"), false, ContextMenuActions, UserActions.addConnection);
+            menu.AddItem(new GUIContent("Add Dialogue"), false, ContextMenuActions, UserActions.addDialogueNode);
+            menu.AddItem(new GUIContent("Delete"), false, ContextMenuActions, UserActions.deleteNode);
+        }
 
         menu.ShowAsContext();
         e.Use();
@@ -520,6 +536,12 @@ public class DialogueEditor : EditorWindow {
                 break;
             case UserActions.addEndNode:
                 AddNode<EndNode>(new Rect(_mousePosition.x, _mousePosition.y, 100, 100), GetNewId());
+                break;
+            case UserActions.addFunctionNode:
+                AddNode<FunctionNode>(new Rect(_mousePosition.x, _mousePosition.y, 100, 100), GetNewId());
+                break;
+            case UserActions.addDelayNode:
+                AddNode<DelayNode>(new Rect(_mousePosition.x, _mousePosition.y, 100, 100), GetNewId());
                 break;
             case UserActions.addConnection:
                 AddConnection();
@@ -568,7 +590,10 @@ public class DialogueEditor : EditorWindow {
             || (_lastLeftClickedNode is DialogueNode && _lastRightClickedNode is OptionNode)
             || (_lastLeftClickedNode is OptionNode && _lastRightClickedNode is DialogueNode)
             || (_lastLeftClickedNode is EndNode && _lastRightClickedNode is OptionNode)
-			|| (_lastLeftClickedNode is ComparativeNode && _lastRightClickedNode is OptionNode))
+            || (_lastLeftClickedNode is ComparativeNode && _lastRightClickedNode is OptionNode)
+            || (_lastLeftClickedNode is DialogueNode && _lastRightClickedNode is DelayNode)
+            || (_lastLeftClickedNode is DelayNode && _lastRightClickedNode is DialogueNode)
+            )
         {
             /* Si la conexión es válida seteo al ultimo nodo en el cual se hizo click 
              * izquierdo como el padre del ultimo nodo en el que se hizo click derecho */

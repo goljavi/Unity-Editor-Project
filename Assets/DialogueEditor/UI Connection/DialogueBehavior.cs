@@ -116,13 +116,29 @@ public class DialogueBehavior : MonoBehaviour
         {
             id = dialogueNode.id,
             dialogue = dialogueNode.data,
-            options = GetDialogueOptions(dialogueNode)
+            options = GetDialogueOptions(dialogueNode),
+            delay = GetDelay(dialogueNode)
         };
 
         /* Una vez que tengo el diccionario de opciones creado pido el linkeo entre una opción y el siguiente nodo a GetOptionsLinks()
          * Que me devuelve |Key: id del option| |Value: id del nodo al que linkea| */
         dialogueObj.optionsLinks = GetOptionsLinks(dialogueObj.options);
         return dialogueObj;
+    }
+
+    //Devuelve el delay del dialogo
+    float GetDelay(DialogueMapSerializedObject dialogueNode)
+    {
+        //Por cada nodo
+        foreach (var node in dialog.nodes)
+        {
+            //Si el nodo es de tipo "Delay"
+            if (node.windowTitle == "Delay")
+            {
+                return float.Parse(node.data);
+            }
+        }
+        return 0;
     }
 
     //Devuelve un diccionario con el id de las opciones y texto de un nodo especifico
