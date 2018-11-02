@@ -61,9 +61,11 @@ public class DialogueEditor : EditorWindow {
 	//TODO: Implemetar en esta clase
 	Parameters _fileParameters = new Parameters();
 
-    //En este enum están todas las posibles acciones a las que se puede llamar
-    //haciendo click derecho en el editor ya sea en un nodo individual o no.
-    public enum UserActions
+	public Parameters FileParameters {get{return _fileParameters;}}
+
+	//En este enum están todas las posibles acciones a las que se puede llamar
+	//haciendo click derecho en el editor ya sea en un nodo individual o no.
+	public enum UserActions
     {
         addStartNode,
         addEndNode,
@@ -224,7 +226,7 @@ public class DialogueEditor : EditorWindow {
     //Es el update del EditorWindow
     private void OnGUI()
     {
-
+		
 
         //Logeo la posición del mouse
         Event e = Event.current;
@@ -531,7 +533,7 @@ public class DialogueEditor : EditorWindow {
                 DeleteNode();
                 break;
 			case UserActions.addComparisonNode:
-				AddNode<ComparativeNode>(new Rect(_mousePosition.x, _mousePosition.y, 100, 100), GetNewId());
+				AddNode<ComparativeNode>(new Rect(_mousePosition.x, _mousePosition.y, 180, 100), GetNewId());
 				break;
 			case UserActions.addConnectionAsFalse:
 

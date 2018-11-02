@@ -21,6 +21,9 @@ public abstract class BaseNode {
 	//Guardo la referencia a la ventana de nodos en caso de que el nodo necesite llamar a algún metodo de esta
 	public DialogueEditor reference;
 
+	//Transiciones posibles
+	public List<string> validTransitions;
+
 	//Para obtener el tipo de nodo
 	public abstract string GetNodeType { get; }
 

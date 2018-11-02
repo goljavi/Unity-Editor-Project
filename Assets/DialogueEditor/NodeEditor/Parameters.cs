@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class Parameters {
 
-	private Dictionary<string, int> intParameters = new Dictionary<string, int>();
-	private Dictionary<string, float> floatParameters = new Dictionary<string, float>();
-	private Dictionary<string, bool> boolParameters = new Dictionary<string, bool>();
+	private SortedDictionary<string, int> intParameters = new SortedDictionary<string, int>();
+	private SortedDictionary<string, float> floatParameters = new SortedDictionary<string, float>();
+	private SortedDictionary<string, bool> boolParameters = new SortedDictionary<string, bool>();
 
 	//Lista de nombres de parametros de cada tipo
 	public List<string> IntParametersNames {
