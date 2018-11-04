@@ -14,7 +14,6 @@ public class DialogueEditor : EditorWindow {
     private bool changesMade;
 
     private Vector2 graphPan;
-    private Rect graphRect;
 
     //Variables para el paneo
     Vector2 _scrollPos;
@@ -282,8 +281,6 @@ public class DialogueEditor : EditorWindow {
 
         EditorGUILayout.EndHorizontal();
         EditorGUILayout.EndVertical();
-        graphRect.x = graphPan.x;
-        graphRect.y = graphPan.y;
     }
 
 

@@ -4,14 +4,18 @@ using UnityEngine;
 using UnityEditor;
 
 public class FunctionNode : BaseNode {
-	public string text;
-    private SerializedObject serializedObject;
-
-    public override string GetNodeType { get { return "Function"; } }
+	public float num;
+	public override string GetNodeType { get { return "Function"; } }
 
 	public override void DrawNode() {
-        //EditorGUILayout.PropertyField(serializedObject.FindProperty("onSkillUse"), new GUIContent("On Skill Use"));
-    }
+        EditorGUILayout.LabelField("ID");
+        var numVal = EditorGUILayout.FloatField(num);
+		if (numVal != num)
+		{
+            num = numVal;
+			reference.NotifyChangesWereMade();
+		}
+	}
 
 	public override Color GetBackgroundColor() {
 
@@ -21,11 +25,11 @@ public class FunctionNode : BaseNode {
 
 
     public override string GetNodeData() {
-		return text;
+		return num.ToString();
 	}
 
 	public override void SetNodeData(string data) {
-		text = data;
+		num = float.Parse(data);
 	}
 
 	public override void DrawConnection() {
