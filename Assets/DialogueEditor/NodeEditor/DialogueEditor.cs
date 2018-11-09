@@ -63,9 +63,13 @@ public class DialogueEditor : EditorWindow {
 
 	public Parameters FileParameters {get{return _fileParameters;}}
 
-	//En este enum están todas las posibles acciones a las que se puede llamar
-	//haciendo click derecho en el editor ya sea en un nodo individual o no.
-	public enum UserActions
+    private ComparativeNode.ComparisonType activeType;
+
+    private string parameterAsignationName;
+
+    //En este enum están todas las posibles acciones a las que se puede llamar
+    //haciendo click derecho en el editor ya sea en un nodo individual o no.
+    public enum UserActions
     {
         addStartNode,
         addEndNode,
@@ -226,7 +230,6 @@ public class DialogueEditor : EditorWindow {
     //Es el update del EditorWindow
     private void OnGUI()
     {
-		
 
         //Logeo la posición del mouse
         Event e = Event.current;
@@ -243,7 +246,9 @@ public class DialogueEditor : EditorWindow {
         DrawNodes();
 
         //Dibujo la Toolbar despues de los nodos para que los tape
-        DrawToolbar();       
+        DrawToolbar();
+
+        DrawParameters();
 
         //Guardo la información registrada hasta el momento
         SaveAssetFile();
@@ -288,6 +293,122 @@ public class DialogueEditor : EditorWindow {
         graphRect.x = graphPan.x;
         graphRect.y = graphPan.y;
     }
+
+    void DrawParameters()
+    {
+        //Style de parameters
+        var mySelf = GetWindow<DialogueEditor>();
+        mySelf.myStyle = new GUIStyle();
+        mySelf.myStyle.fontSize = 10;
+        mySelf.myStyle.alignment = TextAnchor.MiddleCenter;
+        mySelf.myStyle.fontStyle = FontStyle.BoldAndItalic;
+
+        //Estas es la ventana de parameters
+        Rect paramsRect = new Rect(0, 100, 200, position.height - 100);
+        EditorGUI.DrawRect(paramsRect, new Color32(80, 80 ,80, 255));
+        EditorGUILayout.BeginHorizontal(GUILayout.Width(paramsRect.width));
+        EditorGUILayout.BeginVertical(GUILayout.Height(100));
+        EditorGUILayout.LabelField("Parameters", myStyle, GUILayout.Height(50));
+
+
+        //Selector de tipo de parametros
+        EditorGUILayout.LabelField("Type selector:", myStyle, GUILayout.Height(50));
+        activeType = (ComparativeNode.ComparisonType)EditorGUILayout.EnumPopup(activeType, GUILayout.Width(paramsRect.width - 10));
+
+        //Funciones que ejecuta segun el tipo
+        switch (activeType)
+        {
+            case ComparativeNode.ComparisonType.Float:
+                ShowParametersFloat(paramsRect.width);
+                break;
+            case ComparativeNode.ComparisonType.Int:
+                ShowParametersInt(paramsRect.width);
+                break;
+            case ComparativeNode.ComparisonType.Bool:
+                ShowParametersBool(paramsRect.width);
+                break;
+            default:
+                break;
+        }
+
+
+        EditorGUILayout.EndVertical();
+        EditorGUILayout.EndHorizontal();
+    }
+
+    //Metodo que muestra los parametros tipo float
+    void ShowParametersFloat(float paramsWidth)
+    {
+        EditorGUILayout.BeginHorizontal(GUILayout.Width(paramsWidth - 20));
+        if (GUILayout.Button("Create", GUILayout.Width(80), GUILayout.Height(20)))
+        {
+            FileParameters.AddFloat(parameterAsignationName);
+        }
+
+        parameterAsignationName = EditorGUILayout.TextField(parameterAsignationName);
+        EditorGUILayout.EndHorizontal();
+
+
+        foreach (var item in FileParameters.FloatParametersNames)
+        {
+            EditorGUILayout.BeginHorizontal(GUILayout.Width(paramsWidth));
+
+            EditorGUILayout.FloatField(item, FileParameters.GetFloat(item));
+            EditorGUILayout.EndHorizontal();
+            if (GUILayout.Button("Delete", GUILayout.Width(60), GUILayout.Height(20)))
+            {
+                //Añadir funcion para remover!
+            }
+        }
+    }
+    //Metodo que muestra los parametros tipo INT
+    void ShowParametersInt(float paramsWidth)
+    {
+        EditorGUILayout.BeginHorizontal(GUILayout.Width(paramsWidth - 20));
+        if (GUILayout.Button("Create", GUILayout.Width(80), GUILayout.Height(20)))
+        {
+            FileParameters.AddInt(parameterAsignationName);
+        }
+
+        parameterAsignationName = EditorGUILayout.TextField(parameterAsignationName);
+        EditorGUILayout.EndHorizontal();
+
+        foreach (var item in FileParameters.IntParametersNames)
+        {
+            EditorGUILayout.BeginHorizontal(GUILayout.Width(paramsWidth -20));
+            EditorGUILayout.IntField(item, FileParameters.GetInt(item));
+            if (GUILayout.Button("Delete", GUILayout.Width(60), GUILayout.Height(20)))
+            {
+                //Añadir funcion para remover!
+            }
+            EditorGUILayout.EndHorizontal();
+        }
+    }
+
+    //Metodo que muestra los parametros tipo Bool
+    void ShowParametersBool(float paramsWidth)
+    {
+        EditorGUILayout.BeginHorizontal(GUILayout.Width(paramsWidth - 20));
+        if (GUILayout.Button("Create", GUILayout.Width(80), GUILayout.Height(20)))
+        {
+            FileParameters.AddBool(parameterAsignationName);
+        }
+
+        parameterAsignationName = EditorGUILayout.TextField(parameterAsignationName);
+        EditorGUILayout.EndHorizontal();
+
+        foreach (var item in FileParameters.BoolParametersNames)
+        {
+            EditorGUILayout.BeginHorizontal(GUILayout.Width(paramsWidth - 20));
+            EditorGUILayout.Toggle(item, FileParameters.GetBool(item));
+            if (GUILayout.Button("Delete", GUILayout.Width(60), GUILayout.Height(20)))
+            {
+                //Añadir funcion para remover!
+            }
+            EditorGUILayout.EndHorizontal();
+        }
+    }
+
 
 
     //Se encarga de dibujar los nodos sobre la ventana
@@ -386,7 +507,6 @@ public class DialogueEditor : EditorWindow {
             }
         }
     }
-
 
     //FUNCION PARA QUE PANEÉ
     void Panning(Event e)
