@@ -383,11 +383,11 @@ public class DialogueEditor : EditorWindow {
         {
             EditorGUILayout.BeginHorizontal(GUILayout.Width(paramsWidth -20));
             EditorGUILayout.IntField(item, FileParameters.GetInt(item));
+            EditorGUILayout.EndHorizontal();
             if (GUILayout.Button("Delete", GUILayout.Width(60), GUILayout.Height(20)))
             {
 				_fileParameters.DeleteParameter(item, ComparativeNode.ComparisonType.Int);
 			}
-            EditorGUILayout.EndHorizontal();
         }
     }
 
@@ -408,11 +408,11 @@ public class DialogueEditor : EditorWindow {
         {
             EditorGUILayout.BeginHorizontal(GUILayout.Width(paramsWidth - 20));
             EditorGUILayout.Toggle(item, FileParameters.GetBool(item));
+            EditorGUILayout.EndHorizontal();
             if (GUILayout.Button("Delete", GUILayout.Width(60), GUILayout.Height(20)))
             {
 				_fileParameters.DeleteParameter(item, ComparativeNode.ComparisonType.Bool);
 			}
-            EditorGUILayout.EndHorizontal();
         }
     }
 
