@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class Parameters {
 
-	private Dictionary<string, int> intParameters = new Dictionary<string, int>();
-	private Dictionary<string, float> floatParameters = new Dictionary<string, float>();
-	private Dictionary<string, bool> boolParameters = new Dictionary<string, bool>();
+	private SortedDictionary<string, int> intParameters = new SortedDictionary<string, int>();
+	private SortedDictionary<string, float> floatParameters = new SortedDictionary<string, float>();
+	private SortedDictionary<string, bool> boolParameters = new SortedDictionary<string, bool>();
 
 	//Lista de nombres de parametros de cada tipo
 	public List<string> IntParametersNames {
@@ -54,6 +54,7 @@ public class Parameters {
 		if (floatParameters.ContainsKey(parameterName))
 		{
 			success = true;
+			
 			return floatParameters[parameterName];
 		} else
 		{
@@ -111,15 +112,15 @@ public class Parameters {
 
 	//Crear un parametro
 	public void AddInt(string name) {
-		if (!intParameters.ContainsKey(name))
+		if (name != null && name!= "" && !intParameters.ContainsKey(name))
 			intParameters.Add(name, 0);
 	}
 	public void AddFloat(string name) {
-		if (!floatParameters.ContainsKey(name))
+		if (name != null && name != "" && !floatParameters.ContainsKey(name))
 			floatParameters.Add(name, 0f);
 	}
 	public void AddBool(string name) {
-		if (!boolParameters.ContainsKey(name))
+		if (name != null && name != "" && !boolParameters.ContainsKey(name))
 			boolParameters.Add(name, false);
 	}
 
@@ -164,6 +165,23 @@ public class Parameters {
 				break;
 		}
 	}
+
+	//Borrar parametros
+	public void DeleteParameter(string name, ComparativeNode.ComparisonType type) {
+		switch (type)
+		{
+			case ComparativeNode.ComparisonType.Float:
+				floatParameters.Remove(name);
+				break;
+			case ComparativeNode.ComparisonType.Int:
+				intParameters.Remove(name);
+				break;
+			case ComparativeNode.ComparisonType.Bool:
+				boolParameters.Remove(name);
+				break;
+		}
+	}
+
 
 	//Obtener data serializada
 	public ParametersData GetData() {

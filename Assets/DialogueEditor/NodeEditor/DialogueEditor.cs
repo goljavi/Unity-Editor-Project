@@ -14,6 +14,7 @@ public class DialogueEditor : EditorWindow {
     private bool changesMade;
 
     private Vector2 graphPan;
+    private Rect graphRect;
 
     //Variables para el paneo
     Vector2 _scrollPos;
@@ -59,6 +60,14 @@ public class DialogueEditor : EditorWindow {
 	//En runtime va a usar una copia de esta clase para no modificar el archivo.
 	//TODO: Implemetar en esta clase
 	Parameters _fileParameters = new Parameters();
+
+	public Parameters FileParameters {get{return _fileParameters;}}
+
+	//Tipo de parametros a mostrar
+    private ComparativeNode.ComparisonType activeType;
+
+	//Nombre del proximo parametro a crear
+    private string parameterAsignationName;
 
     //En este enum están todas las posibles acciones a las que se puede llamar
     //haciendo click derecho en el editor ya sea en un nodo individual o no.
@@ -160,9 +169,9 @@ public class DialogueEditor : EditorWindow {
                                  */
                                 node.SetParent(n);
 
-								if(n as INeedsChildren != null)
+								if(n is INeedsChildren)
 								{
-									((INeedsChildren)n).AssignChild(node, -1);
+									((INeedsChildren)n).AssignChild(node);
 								}
                             }
                         }
@@ -226,7 +235,6 @@ public class DialogueEditor : EditorWindow {
     private void OnGUI()
     {
 
-
         //Logeo la posición del mouse
         Event e = Event.current;
         _mousePosition = e.mousePosition;
@@ -242,7 +250,12 @@ public class DialogueEditor : EditorWindow {
         DrawNodes();
 
         //Dibujo la Toolbar despues de los nodos para que los tape
-        DrawToolbar();       
+        DrawToolbar();
+
+        DrawParameters();
+
+        //Guardo la información registrada hasta el momento
+        SaveAssetFile();
 
         PaintNode();
     }
@@ -281,7 +294,128 @@ public class DialogueEditor : EditorWindow {
 
         EditorGUILayout.EndHorizontal();
         EditorGUILayout.EndVertical();
+        graphRect.x = graphPan.x;
+        graphRect.y = graphPan.y;
     }
+
+    void DrawParameters()
+    {
+        //Style de parameters
+        var mySelf = GetWindow<DialogueEditor>();
+        mySelf.myStyle = new GUIStyle();
+        mySelf.myStyle.fontSize = 10;
+        mySelf.myStyle.alignment = TextAnchor.MiddleCenter;
+        mySelf.myStyle.fontStyle = FontStyle.BoldAndItalic;
+
+        //Estas es la ventana de parameters
+        Rect paramsRect = new Rect(0, 100, 200, position.height - 100);
+        EditorGUI.DrawRect(paramsRect, new Color32(80, 80 ,80, 255));
+        EditorGUILayout.BeginHorizontal(GUILayout.Width(paramsRect.width));
+        EditorGUILayout.BeginVertical(GUILayout.Height(100));
+        EditorGUILayout.LabelField("Parameters", myStyle, GUILayout.Height(50));
+
+
+        //Selector de tipo de parametros
+        EditorGUILayout.LabelField("Type selector:", myStyle, GUILayout.Height(50));
+        activeType = (ComparativeNode.ComparisonType)EditorGUILayout.EnumPopup(activeType, GUILayout.Width(paramsRect.width - 10));
+
+        //Funciones que ejecuta segun el tipo
+        switch (activeType)
+        {
+            case ComparativeNode.ComparisonType.Float:
+                ShowParametersFloat(paramsRect.width);
+                break;
+            case ComparativeNode.ComparisonType.Int:
+                ShowParametersInt(paramsRect.width);
+                break;
+            case ComparativeNode.ComparisonType.Bool:
+                ShowParametersBool(paramsRect.width);
+                break;
+            default:
+                break;
+        }
+
+
+        EditorGUILayout.EndVertical();
+        EditorGUILayout.EndHorizontal();
+    }
+
+    //Metodo que muestra los parametros tipo float
+    void ShowParametersFloat(float paramsWidth)
+    {
+        EditorGUILayout.BeginHorizontal(GUILayout.Width(paramsWidth - 20));
+        if (GUILayout.Button("Create", GUILayout.Width(80), GUILayout.Height(20)))
+        {
+            FileParameters.AddFloat(parameterAsignationName);
+			parameterAsignationName = "";
+		}
+
+        parameterAsignationName = EditorGUILayout.TextField(parameterAsignationName);
+        EditorGUILayout.EndHorizontal();
+
+
+        foreach (var item in FileParameters.FloatParametersNames)
+        {
+            EditorGUILayout.BeginHorizontal(GUILayout.Width(paramsWidth));
+
+            EditorGUILayout.FloatField(item, FileParameters.GetFloat(item));
+            EditorGUILayout.EndHorizontal();
+            if (GUILayout.Button("Delete", GUILayout.Width(60), GUILayout.Height(20)))
+            {
+				_fileParameters.DeleteParameter(item, ComparativeNode.ComparisonType.Float);
+            }
+        }
+    }
+    //Metodo que muestra los parametros tipo INT
+    void ShowParametersInt(float paramsWidth)
+    {
+        EditorGUILayout.BeginHorizontal(GUILayout.Width(paramsWidth - 20));
+        if (GUILayout.Button("Create", GUILayout.Width(80), GUILayout.Height(20)))
+        {
+            FileParameters.AddInt(parameterAsignationName);
+			parameterAsignationName = "";
+		}
+
+        parameterAsignationName = EditorGUILayout.TextField(parameterAsignationName);
+        EditorGUILayout.EndHorizontal();
+
+        foreach (var item in FileParameters.IntParametersNames)
+        {
+            EditorGUILayout.BeginHorizontal(GUILayout.Width(paramsWidth -20));
+            EditorGUILayout.IntField(item, FileParameters.GetInt(item));
+            if (GUILayout.Button("Delete", GUILayout.Width(60), GUILayout.Height(20)))
+            {
+				_fileParameters.DeleteParameter(item, ComparativeNode.ComparisonType.Int);
+			}
+            EditorGUILayout.EndHorizontal();
+        }
+    }
+
+    //Metodo que muestra los parametros tipo Bool
+    void ShowParametersBool(float paramsWidth)
+    {
+        EditorGUILayout.BeginHorizontal(GUILayout.Width(paramsWidth - 20));
+        if (GUILayout.Button("Create", GUILayout.Width(80), GUILayout.Height(20)))
+        {
+            FileParameters.AddBool(parameterAsignationName);
+			parameterAsignationName = "";
+        }
+
+        parameterAsignationName = EditorGUILayout.TextField(parameterAsignationName);
+        EditorGUILayout.EndHorizontal();
+
+        foreach (var item in FileParameters.BoolParametersNames)
+        {
+            EditorGUILayout.BeginHorizontal(GUILayout.Width(paramsWidth - 20));
+            EditorGUILayout.Toggle(item, FileParameters.GetBool(item));
+            if (GUILayout.Button("Delete", GUILayout.Width(60), GUILayout.Height(20)))
+            {
+				_fileParameters.DeleteParameter(item, ComparativeNode.ComparisonType.Bool);
+			}
+            EditorGUILayout.EndHorizontal();
+        }
+    }
+
 
 
     //Se encarga de dibujar los nodos sobre la ventana
@@ -380,7 +514,6 @@ public class DialogueEditor : EditorWindow {
             }
         }
     }
-
 
     //FUNCION PARA QUE PANEÉ
     void Panning(Event e)
@@ -547,7 +680,7 @@ public class DialogueEditor : EditorWindow {
                 DeleteNode();
                 break;
 			case UserActions.addComparisonNode:
-				AddNode<ComparativeNode>(new Rect(_mousePosition.x, _mousePosition.y, 100, 100), GetNewId());
+				AddNode<ComparativeNode>(new Rect(_mousePosition.x, _mousePosition.y, 180, 100), GetNewId());
 				break;
 			case UserActions.addConnectionAsFalse:
 
@@ -580,21 +713,26 @@ public class DialogueEditor : EditorWindow {
     {
         if (_lastRightClickedNode == null || _lastLeftClickedNode == null) return;
 
-        /* Ya que hay nodos que no pueden tener ciertos tipos de padre (el nodo respuesta no puede 
+		/* Ya que hay nodos que no pueden tener ciertos tipos de padre (el nodo respuesta no puede 
          * tener otro nodo respuesta como padre) chequeo que la conexión que se intente hacer sea válida */
-		 //TO DO: Cambiar esta cadena de condiciones por un diccionario/Tupla de transiciones permitidas
-        if ((_lastLeftClickedNode is StartNode && _lastRightClickedNode is DialogueNode)
-            || (_lastLeftClickedNode is DialogueNode && _lastRightClickedNode is OptionNode)
-            || (_lastLeftClickedNode is OptionNode && _lastRightClickedNode is DialogueNode)
-            || (_lastLeftClickedNode is EndNode && _lastRightClickedNode is OptionNode)
-            || (_lastLeftClickedNode is ComparativeNode && _lastRightClickedNode is OptionNode)
-            || (_lastLeftClickedNode is DialogueNode && _lastRightClickedNode is DelayNode)
-            || (_lastLeftClickedNode is DelayNode && _lastRightClickedNode is DialogueNode)
-            )
-        {
-            /* Si la conexión es válida seteo al ultimo nodo en el cual se hizo click 
+		
+		#region Checkeo legacy, para referencia
+		//if ((_lastLeftClickedNode is StartNode && _lastRightClickedNode is DialogueNode)
+  //          || (_lastLeftClickedNode is DialogueNode && _lastRightClickedNode is OptionNode)
+  //          || (_lastLeftClickedNode is OptionNode && _lastRightClickedNode is DialogueNode)
+  //          || (_lastLeftClickedNode is EndNode && _lastRightClickedNode is OptionNode)
+		//	|| (_lastLeftClickedNode is ComparativeNode && _lastRightClickedNode is OptionNode))
+
+		#endregion
+		if(_lastLeftClickedNode.CanTransitionTo(_lastRightClickedNode))
+		{
+			/* Si la conexión es válida seteo al ultimo nodo en el cual se hizo click 
              * izquierdo como el padre del ultimo nodo en el que se hizo click derecho */
-            _lastRightClickedNode.SetParent(_lastLeftClickedNode);
+			_lastRightClickedNode.SetParent(_lastLeftClickedNode);
+			if(_lastLeftClickedNode is INeedsChildren)
+			{
+				((INeedsChildren)_lastLeftClickedNode).AssignChild(_lastRightClickedNode);
+			}
         }   
     }
 

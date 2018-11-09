@@ -11,27 +11,130 @@ public class ComparativeNode : BaseNode, INeedsChildren {
 	//Tipo de comparacion activa
 	public enum ComparisonType { Float, Int, Bool }
 	private ComparisonType activeType;
+	private ComparisonType previousType;
 
 	//Operacion comparativa activa
 	public enum ComparisonOperator { Equals, NotEqual, Lesser, LesserEquals, Greater, GreaterEquals }
-	public ComparisonOperator activeOperator;
-
+	private ComparisonOperator activeOperator;
+	private readonly string[] OperatorEnumVisualized = { "==", "!=", "<", "<=", ">", ">=" };
 
 	//Valores con los que se van a comparar
 	private string[] parameterNames = new string[2] { "", "" };
 	private Parameters parameterSource;
+	private int parameterPos1;
+	private int parameterPos2;
 
+	//Constantes
+	private readonly GUIStyle centeredLabel = new GUIStyle { alignment = TextAnchor.MiddleCenter,  };
+
+	//propiedades
 	public override string GetNodeType { get { return "Comparison"; } }
-
 	public Parameters ParameterSource { get { return parameterSource; } set { parameterSource = value; } }
 
 	public override void DrawNode() {
-		activeType = (ComparisonType)EditorGUILayout.Popup((int)activeType,
-			new string[] { "Float", "Int", "Bool" }, new GUIStyle());
-		EditorGUILayout.BeginHorizontal();
+		//typo de comparacion
+		activeType = (ComparisonType)EditorGUILayout.EnumPopup(activeType);
 
-		EditorGUILayout.EndHorizontal();
+		if (parameterSource == null) {
+			Debug.Log("No parameters data");
+			return;
+		}
+		//Que tipo de comparacion dibujar
+		switch (activeType)
+		{
+			case ComparisonType.Float:
+				ShowFloatNode();
+				break;
+			case ComparisonType.Int:
+				ShowIntNode();
+				break;
+			case ComparisonType.Bool:
+				ShowBoolNode();
+				break;
+		}
+		//Para setear a parametros default
+		if (previousType != activeType) previousType = activeType;
 	}
+
+
+	//Metodos para la visualicacion de cada opcion
+	#region Types Display
+
+	private void ShowFloatNode() {
+		//Setear valores por defecto si se cambio de tipo
+		if (previousType != activeType)
+		{
+			parameterNames[0] = parameterSource.DefaultFloatName;
+			parameterNames[1] = parameterSource.DefaultFloatName;
+			parameterPos1 = 0;
+			parameterPos2 = 0;
+		}
+		//Crea un nuevo parametro si no existe ninguno de este tipo
+		if(parameterSource.FloatParametersNames.Count == 0)
+		{
+			ParameterSource.AddFloat("Default Float");
+		}
+		//primer parametro
+		parameterPos1 = EditorGUILayout.Popup(parameterPos1,parameterSource.FloatParametersNames.ToArray());
+		parameterNames[0] = parameterSource.FloatParametersNames[parameterPos1];
+		//Crea una caja con el operador seleccionable
+		Rect OperatorRect = EditorGUILayout.GetControlRect();
+		GUI.Box(OperatorRect, GUIContent.none);
+		activeOperator = (ComparisonOperator)EditorGUI.Popup(OperatorRect,(int)activeOperator,
+			OperatorEnumVisualized,centeredLabel);
+		//Segundo parametro
+		parameterPos2 = EditorGUILayout.Popup(parameterPos2, parameterSource.FloatParametersNames.ToArray());
+		parameterNames[1] = parameterSource.FloatParametersNames[parameterPos2];
+	}
+
+	private void ShowIntNode() {
+		//Setear valores por defecto si se cambio de tipo
+		if (previousType != activeType)
+		{
+			parameterNames[0] = parameterSource.DefaultIntName;
+			parameterNames[1] = parameterSource.DefaultIntName;
+			parameterPos1 = 0;
+			parameterPos2 = 0;
+		}
+		//Crea un nuevo parametro si no existe ninguno de este tipo
+		if (parameterSource.IntParametersNames.Count == 0)
+		{
+			ParameterSource.AddInt("Default Int");
+		}
+		//primer parametro
+		parameterPos1 = EditorGUILayout.Popup(parameterPos1, parameterSource.IntParametersNames.ToArray());
+		parameterNames[0] = parameterSource.IntParametersNames[parameterPos1];
+		//Crea una caja con el operador seleccionable
+		Rect OperatorRect = EditorGUILayout.GetControlRect();
+		GUI.Box(OperatorRect, GUIContent.none);
+		activeOperator = (ComparisonOperator)EditorGUI.Popup(OperatorRect, (int)activeOperator,
+			OperatorEnumVisualized, centeredLabel);
+		//Segundo parametro
+		parameterPos2 = EditorGUILayout.Popup(parameterPos2, parameterSource.IntParametersNames.ToArray());
+		parameterNames[1] = parameterSource.IntParametersNames[parameterPos2];
+	}
+
+	private void ShowBoolNode() {
+		//Setear valores por defecto si se cambio de tipo
+		if (previousType != activeType)
+		{
+			parameterNames[0] = parameterSource.DefaultBoolName;
+			parameterNames[1] = parameterSource.DefaultBoolName;
+			parameterPos1 = 0;
+			parameterPos2 = 0;
+		}
+		//Crea un nuevo parametro si no existe ninguno de este tipo
+		if (parameterSource.BoolParametersNames.Count == 0)
+		{
+			ParameterSource.AddBool("Default Bool");
+		}
+		EditorGUILayout.GetControlRect();
+		parameterPos1 = EditorGUILayout.Popup(parameterPos1, parameterSource.BoolParametersNames.ToArray());
+		parameterNames[0] = parameterSource.BoolParametersNames[parameterPos1];
+	}
+
+
+	#endregion Types Display
 
 	//Obtencion del nodo correspondiente al resultado. 
 	//Tambien se puede acceder con un booleano externo (si por alguna razon se quisiera)
@@ -76,14 +179,6 @@ public class ComparativeNode : BaseNode, INeedsChildren {
 	//Tiene hijos validos. INeedsChildren
 	public bool HasChildren() {
 		return (children[0] != null && children[1] != null);
-	}
-
-
-	//En caso de ser una asignacion por inicializacion
-	public override BaseNode SetParent(BaseNode value) {
-		if (children[0] == value || children[1] == value)
-			return base.SetParent(value);
-		return this;
 	}
 
 	//forma alternativa de setear hijo, mas directo para asignacion manual.
@@ -181,6 +276,18 @@ public class ComparativeNode : BaseNode, INeedsChildren {
 			comparisonOperator = activeOperator,
 			parameterName = parameterNames
 		});
+	}
+
+	public override BaseNode SetReference(DialogueEditor value) {
+		BaseNode baseReturn = base.SetReference(value);
+		parameterSource = reference.FileParameters;
+		return baseReturn;
+	}
+
+	public override bool CanTransitionTo(BaseNode node) {
+		List<string> types = new List<string> { "Dialogue", "End" };
+
+		return types.Contains(node.GetNodeType);
 	}
 
 }

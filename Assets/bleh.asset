@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf7da5580a288c740aa183663abb9b21, type: 3}
+  m_Name: bleh
+  m_EditorClassIdentifier: 
+  nodes:
+  - id: 6954
+    parentIds: 
+    windowRect:
+      serializedVersion: 2
+      x: 614
+      y: 288
+      width: 180
+      height: 100
+    windowTitle: Comparison
+    data: '{"childrenIDs":[-1,-1],"comparisonType":2,"comparisonOperator":0,"parameterName":["Default
+      Bool","Default Bool"]}'
+    nodeType: Comparison
+  parameters:
+    intNames: []
+    intValues: 
+    floatNames:
+    - Default Float
+    floatValues:
+    - 0
+    boolNames:
+    - Default Bool
+    boolValues: 00

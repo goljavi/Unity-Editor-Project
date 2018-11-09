@@ -8,5 +8,5 @@ using UnityEngine;
 public class DialogueNodeMap : ScriptableObject
 {
     public List<DialogueMapSerializedObject> nodes = new List<DialogueMapSerializedObject>();
-	public ParametersData parameters;
+	public ParametersData parameters = new ParametersData();
 }

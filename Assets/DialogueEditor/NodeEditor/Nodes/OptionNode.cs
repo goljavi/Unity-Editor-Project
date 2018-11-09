@@ -43,4 +43,10 @@ public class OptionNode : BaseNode {
 			}
 		}
 	}
+
+	public override bool CanTransitionTo(BaseNode node) {
+		List<string> types = new List<string> { "Comparison", "Dialogue", "End" };
+
+		return types.Contains(node.GetNodeType);
+	}
 }
