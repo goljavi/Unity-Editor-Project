@@ -43,4 +43,10 @@ public class DelayNode : BaseNode {
 			}
 		}
 	}
+
+	public override bool CanTransitionTo(BaseNode node) {
+		List<string> types = new List<string> { "Dialogue", "End", "Comparison", "Function" };
+
+		return types.Contains(node.GetNodeType);
+	}
 }

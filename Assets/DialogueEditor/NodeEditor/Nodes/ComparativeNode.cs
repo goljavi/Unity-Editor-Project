@@ -285,7 +285,7 @@ public class ComparativeNode : BaseNode, INeedsChildren {
 	}
 
 	public override bool CanTransitionTo(BaseNode node) {
-		List<string> types = new List<string> { "Dialogue", "End" };
+		List<string> types = new List<string> { "Dialogue", "End", "Delay", "Function" };
 
 		return types.Contains(node.GetNodeType);
 	}

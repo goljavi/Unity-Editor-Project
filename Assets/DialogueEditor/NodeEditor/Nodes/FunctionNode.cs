@@ -41,4 +41,10 @@ public class FunctionNode : BaseNode {
 			}
 		}
 	}
+
+	public override bool CanTransitionTo(BaseNode node) {
+		List<string> types = new List<string> { "Dialogue", "End", "Comparison", "Delay" };
+
+		return types.Contains(node.GetNodeType);
+	}
 }

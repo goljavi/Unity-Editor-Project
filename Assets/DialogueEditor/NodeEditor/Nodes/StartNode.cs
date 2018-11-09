@@ -18,7 +18,7 @@ public class StartNode : BaseNode, INeedsChildren {
 	}
 
 	public override bool CanTransitionTo(BaseNode node) {
-		List<string> types = new List<string> { "Comparison", "Dialogue" };
+		List<string> types = new List<string> { "Comparison", "Dialogue", "Function" };
 
 		return types.Contains(node.GetNodeType);
 	}
