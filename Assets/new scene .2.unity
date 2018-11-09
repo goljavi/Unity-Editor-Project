@@ -196,7 +196,7 @@ GameObject:
   m_Component:
   - component: {fileID: 43648613}
   m_Layer: 0
-  m_Name: Characterss
+  m_Name: NPCs
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2372,7 +2372,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1282799309}
-  - component: {fileID: 1282799308}
   m_Layer: 0
   m_Name: DialogueManager
   m_TagString: Untagged
@@ -2380,26 +2379,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1282799308
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1282799307}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6c7cb0e70ace73841b3dd81c7a2b4522, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  nameText: {fileID: 185329347}
-  characterImage: {fileID: 1729904693}
-  dialogueText: {fileID: 1340901071}
-  optionsText:
-  - {fileID: 438473083}
-  - {fileID: 2083372454}
-  - {fileID: 760910767}
-  availableOptionSlots: 0
-  animator: {fileID: 1330863586}
 --- !u!4 &1282799309
 Transform:
   m_ObjectHideFlags: 0
@@ -2576,6 +2555,7 @@ GameObject:
   - component: {fileID: 1330863585}
   - component: {fileID: 1330863584}
   - component: {fileID: 1330863586}
+  - component: {fileID: 1330863587}
   m_Layer: 5
   m_Name: DialogueBoxClassic
   m_TagString: Untagged
@@ -2657,6 +2637,26 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &1330863587
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1330863582}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c7cb0e70ace73841b3dd81c7a2b4522, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nameText: {fileID: 185329347}
+  characterImage: {fileID: 1729904693}
+  dialogueText: {fileID: 1340901071}
+  optionsText:
+  - {fileID: 438473083}
+  - {fileID: 2083372454}
+  - {fileID: 760910767}
+  availableOptionSlots: 3
+  animator: {fileID: 1330863586}
 --- !u!1 &1331892626
 GameObject:
   m_ObjectHideFlags: 0

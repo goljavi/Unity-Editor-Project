@@ -10,6 +10,18 @@ public class DialogueTrigger : MonoBehaviour {
     public Sprite face;
     public DialogueBehavior db;
 
+    public enum DiagPlayerStyle
+    {
+        comic,
+        classic
+    };
+
+    public enum DiagPlayerScreenStyle
+    {
+       worldspaceBubbles,
+       fullscreen
+    };
+
     public void Start()
     {
         db = GetComponent<DialogueBehavior>();
