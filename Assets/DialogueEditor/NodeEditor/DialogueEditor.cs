@@ -63,8 +63,10 @@ public class DialogueEditor : EditorWindow {
 
 	public Parameters FileParameters {get{return _fileParameters;}}
 
+	//Tipo de parametros a mostrar
     private ComparativeNode.ComparisonType activeType;
 
+	//Nombre del proximo parametro a crear
     private string parameterAsignationName;
 
     //En este enum están todas las posibles acciones a las que se puede llamar
@@ -343,7 +345,8 @@ public class DialogueEditor : EditorWindow {
         if (GUILayout.Button("Create", GUILayout.Width(80), GUILayout.Height(20)))
         {
             FileParameters.AddFloat(parameterAsignationName);
-        }
+			parameterAsignationName = "";
+		}
 
         parameterAsignationName = EditorGUILayout.TextField(parameterAsignationName);
         EditorGUILayout.EndHorizontal();
@@ -357,7 +360,7 @@ public class DialogueEditor : EditorWindow {
             EditorGUILayout.EndHorizontal();
             if (GUILayout.Button("Delete", GUILayout.Width(60), GUILayout.Height(20)))
             {
-                //Añadir funcion para remover!
+				_fileParameters.DeleteParameter(item, ComparativeNode.ComparisonType.Float);
             }
         }
     }
@@ -368,7 +371,8 @@ public class DialogueEditor : EditorWindow {
         if (GUILayout.Button("Create", GUILayout.Width(80), GUILayout.Height(20)))
         {
             FileParameters.AddInt(parameterAsignationName);
-        }
+			parameterAsignationName = "";
+		}
 
         parameterAsignationName = EditorGUILayout.TextField(parameterAsignationName);
         EditorGUILayout.EndHorizontal();
@@ -379,8 +383,8 @@ public class DialogueEditor : EditorWindow {
             EditorGUILayout.IntField(item, FileParameters.GetInt(item));
             if (GUILayout.Button("Delete", GUILayout.Width(60), GUILayout.Height(20)))
             {
-                //Añadir funcion para remover!
-            }
+				_fileParameters.DeleteParameter(item, ComparativeNode.ComparisonType.Int);
+			}
             EditorGUILayout.EndHorizontal();
         }
     }
@@ -392,6 +396,7 @@ public class DialogueEditor : EditorWindow {
         if (GUILayout.Button("Create", GUILayout.Width(80), GUILayout.Height(20)))
         {
             FileParameters.AddBool(parameterAsignationName);
+			parameterAsignationName = "";
         }
 
         parameterAsignationName = EditorGUILayout.TextField(parameterAsignationName);
@@ -403,8 +408,8 @@ public class DialogueEditor : EditorWindow {
             EditorGUILayout.Toggle(item, FileParameters.GetBool(item));
             if (GUILayout.Button("Delete", GUILayout.Width(60), GUILayout.Height(20)))
             {
-                //Añadir funcion para remover!
-            }
+				_fileParameters.DeleteParameter(item, ComparativeNode.ComparisonType.Bool);
+			}
             EditorGUILayout.EndHorizontal();
         }
     }
