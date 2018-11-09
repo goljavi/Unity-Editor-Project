@@ -112,15 +112,15 @@ public class Parameters {
 
 	//Crear un parametro
 	public void AddInt(string name) {
-		if (!intParameters.ContainsKey(name))
+		if (name != null && name!= "" && !intParameters.ContainsKey(name))
 			intParameters.Add(name, 0);
 	}
 	public void AddFloat(string name) {
-		if (!floatParameters.ContainsKey(name))
+		if (name != null && name != "" && !floatParameters.ContainsKey(name))
 			floatParameters.Add(name, 0f);
 	}
 	public void AddBool(string name) {
-		if (!boolParameters.ContainsKey(name))
+		if (name != null && name != "" && !boolParameters.ContainsKey(name))
 			boolParameters.Add(name, false);
 	}
 

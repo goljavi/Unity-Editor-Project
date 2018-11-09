@@ -9,6 +9,10 @@ public class StartNode : BaseNode, INeedsChildren {
 	private int childId;
 
 	public void AssignChild(BaseNode child, int childPosition) {
+		if (childId != child.id && childNode != null)
+		{
+			childNode.parents.Remove(this);
+		}
 		childNode = child;
 		childId = child.id;
 	}

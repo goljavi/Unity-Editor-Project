@@ -702,7 +702,7 @@ public class DialogueEditor : EditorWindow {
 			/* Si la conexión es válida seteo al ultimo nodo en el cual se hizo click 
              * izquierdo como el padre del ultimo nodo en el que se hizo click derecho */
 			_lastRightClickedNode.SetParent(_lastLeftClickedNode);
-			if(_lastRightClickedNode is INeedsChildren)
+			if(_lastLeftClickedNode is INeedsChildren)
 			{
 				((INeedsChildren)_lastLeftClickedNode).AssignChild(_lastRightClickedNode);
 			}
