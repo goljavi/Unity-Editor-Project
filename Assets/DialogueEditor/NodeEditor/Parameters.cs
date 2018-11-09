@@ -54,6 +54,7 @@ public class Parameters {
 		if (floatParameters.ContainsKey(parameterName))
 		{
 			success = true;
+			
 			return floatParameters[parameterName];
 		} else
 		{
@@ -164,6 +165,23 @@ public class Parameters {
 				break;
 		}
 	}
+
+	//Borrar parametros
+	public void DeleteParameter(string name, ComparativeNode.ComparisonType type) {
+		switch (type)
+		{
+			case ComparativeNode.ComparisonType.Float:
+				floatParameters.Remove(name);
+				break;
+			case ComparativeNode.ComparisonType.Int:
+				intParameters.Remove(name);
+				break;
+			case ComparativeNode.ComparisonType.Bool:
+				boolParameters.Remove(name);
+				break;
+		}
+	}
+
 
 	//Obtener data serializada
 	public ParametersData GetData() {

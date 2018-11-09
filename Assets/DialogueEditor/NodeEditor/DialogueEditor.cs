@@ -161,9 +161,9 @@ public class DialogueEditor : EditorWindow {
                                  */
                                 node.SetParent(n);
 
-								if((INeedsChildren)n != null)
+								if(n is INeedsChildren)
 								{
-									((INeedsChildren)n).AssignChild(node, -1);
+									((INeedsChildren)n).AssignChild(node);
 								}
                             }
                         }
@@ -566,18 +566,26 @@ public class DialogueEditor : EditorWindow {
     {
         if (_lastRightClickedNode == null || _lastLeftClickedNode == null) return;
 
-        /* Ya que hay nodos que no pueden tener ciertos tipos de padre (el nodo respuesta no puede 
+		/* Ya que hay nodos que no pueden tener ciertos tipos de padre (el nodo respuesta no puede 
          * tener otro nodo respuesta como padre) chequeo que la conexión que se intente hacer sea válida */
-		 //TO DO: Cambiar esta cadena de condiciones por un diccionario/Tupla de transiciones permitidas
-        if ((_lastLeftClickedNode is StartNode && _lastRightClickedNode is DialogueNode)
-            || (_lastLeftClickedNode is DialogueNode && _lastRightClickedNode is OptionNode)
-            || (_lastLeftClickedNode is OptionNode && _lastRightClickedNode is DialogueNode)
-            || (_lastLeftClickedNode is EndNode && _lastRightClickedNode is OptionNode)
-			|| (_lastLeftClickedNode is ComparativeNode && _lastRightClickedNode is OptionNode))
-        {
-            /* Si la conexión es válida seteo al ultimo nodo en el cual se hizo click 
+		
+		#region Checkeo legacy, para referencia
+		//if ((_lastLeftClickedNode is StartNode && _lastRightClickedNode is DialogueNode)
+  //          || (_lastLeftClickedNode is DialogueNode && _lastRightClickedNode is OptionNode)
+  //          || (_lastLeftClickedNode is OptionNode && _lastRightClickedNode is DialogueNode)
+  //          || (_lastLeftClickedNode is EndNode && _lastRightClickedNode is OptionNode)
+		//	|| (_lastLeftClickedNode is ComparativeNode && _lastRightClickedNode is OptionNode))
+
+		#endregion
+		if(_lastLeftClickedNode.CanTransitionTo(_lastRightClickedNode))
+		{
+			/* Si la conexión es válida seteo al ultimo nodo en el cual se hizo click 
              * izquierdo como el padre del ultimo nodo en el que se hizo click derecho */
-            _lastRightClickedNode.SetParent(_lastLeftClickedNode);
+			_lastRightClickedNode.SetParent(_lastLeftClickedNode);
+			if(_lastRightClickedNode is INeedsChildren)
+			{
+				((INeedsChildren)_lastLeftClickedNode).AssignChild(_lastRightClickedNode);
+			}
         }   
     }
 

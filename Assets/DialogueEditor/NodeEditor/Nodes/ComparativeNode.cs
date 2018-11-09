@@ -181,14 +181,6 @@ public class ComparativeNode : BaseNode, INeedsChildren {
 		return (children[0] != null && children[1] != null);
 	}
 
-
-	//En caso de ser una asignacion por inicializacion
-	public override BaseNode SetParent(BaseNode value) {
-		if (children[0] == value || children[1] == value)
-			return base.SetParent(value);
-		return this;
-	}
-
 	//forma alternativa de setear hijo, mas directo para asignacion manual.
 	public BaseNode SetChild(BaseNode node, bool correspondingCase) {
 		int i = correspondingCase ? 0 : 1;
@@ -290,6 +282,12 @@ public class ComparativeNode : BaseNode, INeedsChildren {
 		BaseNode baseReturn = base.SetReference(value);
 		parameterSource = reference.FileParameters;
 		return baseReturn;
+	}
+
+	public override bool CanTransitionTo(BaseNode node) {
+		List<string> types = new List<string> { "Dialogue", "End" };
+
+		return types.Contains(node.GetNodeType);
 	}
 
 }

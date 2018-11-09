@@ -27,6 +27,8 @@ public abstract class BaseNode {
 	//Para obtener el tipo de nodo
 	public abstract string GetNodeType { get; }
 
+	public abstract bool CanTransitionTo(BaseNode node);
+
 	//Estas funciones son llamadas por la ventana de nodos para que cada nodo dibuje su contenido y sus conexiones
 	public virtual void DrawNode() { }
 
