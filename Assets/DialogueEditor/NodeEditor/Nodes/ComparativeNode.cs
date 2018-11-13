@@ -76,6 +76,7 @@ public class ComparativeNode : BaseNode, INeedsChildren {
 		}
 		//primer parametro
 		parameterPos1 = EditorGUILayout.Popup(parameterPos1,parameterSource.FloatParametersNames.ToArray());
+		//if(parameterSource.FloatParametersNames[parameterPos1] == null)
 		parameterNames[0] = parameterSource.FloatParametersNames[parameterPos1];
 		//Crea una caja con el operador seleccionable
 		Rect OperatorRect = EditorGUILayout.GetControlRect();
@@ -146,8 +147,8 @@ public class ComparativeNode : BaseNode, INeedsChildren {
 		return successful ? children[0] : children[1];
 	}
 	//Como se usara por default.
-	public BaseNode GetResult() {
-		return GetResult(Compare());
+	public BaseNode GetResult(Parameters parameters) {
+		return GetResult(Compare(parameters));
 	}
 
 	//Asignacion de hijos correspondiente a verdadero(0) o falso(1). Si es negativo busca si tiene el ID de child
@@ -170,7 +171,7 @@ public class ComparativeNode : BaseNode, INeedsChildren {
 		} else
 		{
 			if (children[childPosition] != null)
-				children[childPosition].SetParent(null);
+				children[childPosition].parents.Remove(this);
 
 			children[childPosition] = child;
 		}
@@ -189,15 +190,15 @@ public class ComparativeNode : BaseNode, INeedsChildren {
 	}
 
 	//Ejecuta la comparacion correspondiente
-	public bool Compare() {
+	public bool Compare(Parameters parameters) {
 		switch (activeType)
 		{
 			case ComparisonType.Float:
-				return CompareFloat();
+				return CompareFloat(parameters);
 			case ComparisonType.Int:
-				return CompareInt();
+				return CompareInt(parameters);
 			case ComparisonType.Bool:
-				return parameterSource.GetBool(parameterNames[0]);
+				return parameters.GetBool(parameterNames[0]);
 			default:
 				Debug.LogWarning("Invalid Comparison Type Enum at " + this.ToString());
 				return false;
@@ -205,10 +206,10 @@ public class ComparativeNode : BaseNode, INeedsChildren {
 	}
 
 	//Comparacion de floats
-	private bool CompareFloat() {
+	private bool CompareFloat(Parameters parameters) {
 
-		float float1 = parameterSource.GetFloat(parameterNames[0]);
-		float float2 = parameterSource.GetFloat(parameterNames[1]);
+		float float1 = parameters.GetFloat(parameterNames[0]);
+		float float2 = parameters.GetFloat(parameterNames[1]);
 		switch (activeOperator)
 		{
 			case ComparisonOperator.Equals:
@@ -230,9 +231,9 @@ public class ComparativeNode : BaseNode, INeedsChildren {
 	}
 
 	//comparacion de ints
-	private bool CompareInt() {
-		float int1 = parameterSource.GetInt(parameterNames[0]);
-		float int2 = parameterSource.GetInt(parameterNames[1]);
+	private bool CompareInt(Parameters parameters) {
+		float int1 = parameters.GetInt(parameterNames[0]);
+		float int2 = parameters.GetInt(parameterNames[1]);
 		switch (activeOperator)
 		{
 			case ComparisonOperator.Equals:
@@ -256,12 +257,13 @@ public class ComparativeNode : BaseNode, INeedsChildren {
 	private bool ValidIndex(int value) { if (value == 0 || value == 1) return true; else return false; }
 
 	//Asignacion y obtencion de data
-	public override void SetNodeData(string data) {
+	public override BaseNode SetNodeData(string data) {
 		ComparativeNodeData converted = JsonUtility.FromJson<ComparativeNodeData>(data);
 		childrenIDs = converted.childrenIDs;
 		activeType = converted.comparisonType;
 		activeOperator = converted.comparisonOperator;
 		parameterNames = converted.parameterName;
+		return this;
 	}
 
 	public override string GetNodeData() {
@@ -285,7 +287,8 @@ public class ComparativeNode : BaseNode, INeedsChildren {
 	}
 
 	public override bool CanTransitionTo(BaseNode node) {
-		List<string> types = new List<string> { "Dialogue", "End", "Delay", "Function" };
+		List<string> types = new List<string> {
+			"Dialogue", "End", "Delay", "Function" };
 
 		return types.Contains(node.GetNodeType);
 	}
