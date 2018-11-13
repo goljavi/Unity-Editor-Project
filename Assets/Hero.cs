@@ -10,6 +10,8 @@ public class Hero : MonoBehaviour {
     private DialogueObject current;
     private Dictionary<int, int> currentOptionsIds;
 
+    public int oro = 100;
+
     void Start () {
         currentOptionsIds = new Dictionary<int, int>();
         _db = GetComponent<DialogueBehavior>();
@@ -42,7 +44,7 @@ public class Hero : MonoBehaviour {
     }
 	
 	void Update () {
-		
+        current.parameters.Setfloat("oro player", oro);
 	}
 
     public void GetInputField()

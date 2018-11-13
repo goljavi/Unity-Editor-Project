@@ -9,4 +9,5 @@ public class DialogueObject {
     public int functionId;
     public Dictionary<int, int> optionsLinks = new Dictionary<int, int>();
     public Dictionary<int, string> options = new Dictionary<int, string>();
+	public Parameters parameters;
 }

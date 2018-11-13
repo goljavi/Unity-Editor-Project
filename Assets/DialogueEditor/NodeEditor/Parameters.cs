@@ -229,14 +229,15 @@ public class Parameters {
 	}
 
 	//asignar data a partir de la clase de data
-	public void SetData(string data) {
+	public Parameters SetData(string data) {
 		ParametersData converted = JsonUtility.FromJson<ParametersData>(data);
 		SetData(converted);
+		return this;
 	}
 
 	//Asignar data a partir de data serializada
-	public void SetData(ParametersData data) {
-        if (data.intNames == null) return;
+	public Parameters SetData(ParametersData data) {
+        if (data.intNames == null) return this;
 		//ints
 		intParameters.Clear();
 		int c = data.intNames.Count <= data.intValues.Count ?
@@ -257,6 +258,7 @@ public class Parameters {
 			data.boolNames.Count : data.boolValues.Count; //uses minimum count in case of disparity
 		for (int i = 0; i < c; i++)
 			boolParameters.Add(data.boolNames[i], data.boolValues[i]);
+		return this;
 	}
 }
 

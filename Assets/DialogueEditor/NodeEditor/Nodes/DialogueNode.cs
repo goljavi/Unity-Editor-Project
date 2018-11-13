@@ -30,8 +30,9 @@ public class DialogueNode : BaseNode {
 		return text;
 	}
 
-	public override void SetNodeData(string data) {
+	public override BaseNode SetNodeData(string data) {
 		text = data;
+		return this;
 	}
 
 	public override void DrawConnection() {

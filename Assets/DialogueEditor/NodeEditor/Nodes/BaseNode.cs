@@ -49,7 +49,7 @@ public abstract class BaseNode {
     /* Cada nodo sabe cual es la data que contiene y por lo tanto tiene que saber como serializarla y deserializarla
      * ya que necesitamos un medio generico por el cual información que de otra forma, es extremadamente variada
      * Por lo tanto al setear u obtener la información que contiene dentro el nodo, la misma se pasa a través de JSON */
-    public virtual void SetNodeData(string data) { }
+    public virtual BaseNode SetNodeData(string data) { return this; }
 	public virtual string GetNodeData() { return ""; }
 
 	//Builder

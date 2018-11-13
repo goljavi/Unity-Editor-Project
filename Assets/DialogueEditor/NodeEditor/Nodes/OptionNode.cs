@@ -30,8 +30,9 @@ public class OptionNode : BaseNode {
 		return text;
 	}
 
-	public override void SetNodeData(string data) {
+	public override BaseNode SetNodeData(string data) {
 		text = data;
+		return this;
 	}
 
 	public override void DrawConnection() {
@@ -45,7 +46,8 @@ public class OptionNode : BaseNode {
 	}
 
 	public override bool CanTransitionTo(BaseNode node) {
-		List<string> types = new List<string> { "Comparison", "Dialogue", "End", "Delay", "Function" };
+		List<string> types = new List<string> {
+			"Comparison", "Dialogue", "End", "Delay", "Function" };
 
 		return types.Contains(node.GetNodeType);
 	}

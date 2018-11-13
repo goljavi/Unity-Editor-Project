@@ -28,8 +28,9 @@ public class FunctionNode : BaseNode {
 		return num.ToString();
 	}
 
-	public override void SetNodeData(string data) {
+	public override BaseNode SetNodeData(string data) {
 		num = float.Parse(data);
+		return this;
 	}
 
 	public override void DrawConnection() {
