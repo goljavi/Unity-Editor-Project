@@ -132,10 +132,16 @@ public class DialogueEditor : EditorWindow {
 				case "Option":
 					AddNode<OptionNode>(item.windowRect, item.id).SetNodeData(item.data);
 					break;
-				case "Comparison":
-					AddNode<ComparativeNode>(item.windowRect, item.id).SetNodeData(item.data);
-					break;
-			}
+                case "Comparison":
+                    AddNode<ComparativeNode>(item.windowRect, item.id).SetNodeData(item.data);
+                    break;
+                case "Function":
+                    AddNode<FunctionNode>(item.windowRect, item.id).SetNodeData(item.data);
+                    break;
+                case "Delay":
+                    AddNode<DelayNode>(item.windowRect, item.id).SetNodeData(item.data);
+                    break;
+            }
         }
 
         /* Una vez que están todos creados por separado les asigno sus padres a cada uno
@@ -253,9 +259,6 @@ public class DialogueEditor : EditorWindow {
         DrawToolbar();
 
         DrawParameters();
-
-        //Guardo la información registrada hasta el momento
-        SaveAssetFile();
 
         PaintNode();
     }
