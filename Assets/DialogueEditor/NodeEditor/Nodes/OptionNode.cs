@@ -40,7 +40,7 @@ public class OptionNode : BaseNode {
 		{
 			foreach (var parent in parents)
 			{
-				if (parent != null) DialogueEditor.DrawNodeConnection(parent.windowRect, windowRect, true, Color.black);
+				if (parent != null) DialogueEditor.DrawNodeConnection(parent.windowRect, windowRect, true, Color.white);
 			}
 		}
 	}

@@ -39,7 +39,7 @@ public abstract class BaseNode {
 			foreach (var parent in parents)
 			{
 				if (parent != null) DialogueEditor.DrawNodeConnection(parent.windowRect, windowRect,
-					true, Color.black);
+					true, Color.white);
 			}
 		}
 	}

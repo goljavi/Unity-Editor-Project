@@ -870,6 +870,7 @@ public class DialogueEditor : EditorWindow {
     {
         Vector3 lerpVector = Vector3.Lerp(start.center, end.center, 0.1f);
         lerpVector.z = -10f;
+        Handles.color = curveColor;
         Handles.DrawLine(start.center, end.center);
         Handles.ArrowHandleCap(0, lerpVector, Quaternion.LookRotation((end.center - start.center).normalized, Vector3.forward), 100f, EventType.Repaint);
     }

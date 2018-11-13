@@ -5,7 +5,7 @@ using UnityEditor;
 
 public class ComparativeNode : BaseNode, INeedsChildren {
 
-	private BaseNode[] children = new BaseNode[2]; //Los nodos hijos a los que se va a elegir
+	public BaseNode[] children = new BaseNode[2]; //Los nodos hijos a los que se va a elegir
 	private int[] childrenIDs = new int[2]; //IDs de los hijos para futura asignacion
 
 	//Tipo de comparacion activa
