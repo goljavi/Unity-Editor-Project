@@ -315,14 +315,14 @@ public class DialogueEditor : EditorWindow {
         //Style de parameters
         var mySelf = GetWindow<DialogueEditor>();
         mySelf.myStyle = new GUIStyle();
-        mySelf.myStyle.fontSize = 10;
+        mySelf.myStyle.fontSize = 13;
         mySelf.myStyle.alignment = TextAnchor.MiddleCenter;
         mySelf.myStyle.fontStyle = FontStyle.BoldAndItalic;
 
         //Estas es la ventana de parameters
         Rect paramsRect = new Rect(0, 100, 200, position.height - 100);
-        EditorGUI.DrawRect(paramsRect, new Color32(80, 80 ,80, 255));
         EditorGUILayout.BeginHorizontal(GUILayout.Width(paramsRect.width));
+        EditorGUI.DrawRect(paramsRect, new Color32(155, 155 ,155, 255));
         EditorGUILayout.BeginVertical(GUILayout.Height(100));
         EditorGUILayout.LabelField("Parameters", myStyle, GUILayout.Height(50));
 
@@ -355,11 +355,11 @@ public class DialogueEditor : EditorWindow {
     //Metodo que muestra los parametros tipo float
     void ShowParametersFloat(float paramsWidth)
     {
-        EditorGUILayout.BeginHorizontal(GUILayout.Width(paramsWidth - 20));
+        EditorGUILayout.BeginHorizontal(GUILayout.Width(paramsWidth -10));
         if (GUILayout.Button("Create", GUILayout.Width(80), GUILayout.Height(20)))
         {
             FileParameters.AddFloat(parameterAsignationName);
-			parameterAsignationName = "";
+            parameterAsignationName = "";
 		}
 
         parameterAsignationName = EditorGUILayout.TextField(parameterAsignationName);
@@ -368,10 +368,8 @@ public class DialogueEditor : EditorWindow {
 
         foreach (var item in FileParameters.FloatParametersNames)
         {
-            EditorGUILayout.BeginHorizontal(GUILayout.Width(paramsWidth));
 
-            FileParameters.Setfloat(item,EditorGUILayout.FloatField(item, FileParameters.GetFloat(item)));
-            EditorGUILayout.EndHorizontal();
+            FileParameters.Setfloat(item,EditorGUILayout.FloatField(item, FileParameters.GetFloat(item), GUILayout.Width(paramsWidth-10)));
             if (GUILayout.Button("Delete", GUILayout.Width(60), GUILayout.Height(20)))
             {
 				_fileParameters.DeleteParameter(item, ComparativeNode.ComparisonType.Float);
@@ -393,9 +391,7 @@ public class DialogueEditor : EditorWindow {
 
         foreach (var item in FileParameters.IntParametersNames)
         {
-            EditorGUILayout.BeginHorizontal(GUILayout.Width(paramsWidth -20));
-            FileParameters.SetInt(item, EditorGUILayout.IntField(item, FileParameters.GetInt(item)));
-            EditorGUILayout.EndHorizontal();
+            FileParameters.SetInt(item, EditorGUILayout.IntField(item, FileParameters.GetInt(item), GUILayout.Width(paramsWidth - 10)));
             if (GUILayout.Button("Delete", GUILayout.Width(60), GUILayout.Height(20)))
             {
 				_fileParameters.DeleteParameter(item, ComparativeNode.ComparisonType.Int);
@@ -418,16 +414,13 @@ public class DialogueEditor : EditorWindow {
 
         foreach (var item in FileParameters.BoolParametersNames)
         {
-            EditorGUILayout.BeginHorizontal(GUILayout.Width(paramsWidth - 20));
-            FileParameters.SetBool(item, EditorGUILayout.Toggle(item, FileParameters.GetBool(item)));
-            EditorGUILayout.EndHorizontal();
+            FileParameters.SetBool(item, EditorGUILayout.Toggle(item, FileParameters.GetBool(item), GUILayout.Width(paramsWidth - 10)));
             if (GUILayout.Button("Delete", GUILayout.Width(60), GUILayout.Height(20)))
             {
 				_fileParameters.DeleteParameter(item, ComparativeNode.ComparisonType.Bool);
 			}
         }
     }
-
 
 
     //Se encarga de dibujar los nodos sobre la ventana
