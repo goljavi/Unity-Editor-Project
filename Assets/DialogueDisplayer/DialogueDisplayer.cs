@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class DialogueManager : MonoBehaviour {
+public class DialogueDisplayer : MonoBehaviour {
 
-    public static DialogueManager instance;
+    public static DialogueDisplayer instance;
 
     public Text nameText;
     public Image characterImage;

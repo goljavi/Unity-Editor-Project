@@ -10,6 +10,7 @@ public class DialogueEditor : EditorWindow {
     #region VARIABLES
     //Aca se guardan las variables de la toolbar
     private GUIStyle myStyle;
+    private GUIStyle parametersTextStyle;
     private float toolbarHeight = 100;
     private bool changesMade;
 
@@ -43,6 +44,11 @@ public class DialogueEditor : EditorWindow {
 
     //Bool para saber si el nodo está focuseado
     bool _focusedNode;
+
+    //Interactive connection arrow
+    bool interactiveConnectionModeActive;
+    BaseNode interactiveConnectionOriginNode;
+    bool interactiveConnecitonComparativeState; //solo setear false para false connections
 
     //Contiene la referencia al archivo en el cual se está serializando la información
     DialogueNodeMap _assetFile;
@@ -261,6 +267,8 @@ public class DialogueEditor : EditorWindow {
 
         graphGUI.EndGraphGUI();
 
+        DrawInteractiveConnection(e);
+
         //Dibujo los nodos sobre la ventana
         DrawNodes();
 
@@ -270,6 +278,31 @@ public class DialogueEditor : EditorWindow {
         DrawParameters();
 
         PaintNode();
+    }
+
+    void DrawInteractiveConnection(Event e)
+    {
+        //Interactive connection mode. Dibujo flecha interactiva para conectar nodos.
+        if (interactiveConnectionModeActive && interactiveConnectionOriginNode != null)
+        {
+            var mouseRect = new Rect(_mousePosition, Vector2.zero);
+            DrawNodeConnection(interactiveConnectionOriginNode.windowRect, mouseRect, false, Color.yellow);
+
+            if (e.type == EventType.MouseDown && e.button == 0)
+            {
+                if (_lastLeftClickedNode == null) return;
+                if (interactiveConnecitonComparativeState == true)
+                {
+                    AddConnection(interactiveConnectionOriginNode, _lastLeftClickedNode);
+                }
+                else
+                {
+                    AddFalseConnection(interactiveConnectionOriginNode, _lastLeftClickedNode);
+                }
+                interactiveConnectionModeActive = false;
+                interactiveConnectionOriginNode = null;
+            }
+        }
     }
 
     void DrawToolbar()
@@ -422,6 +455,16 @@ public class DialogueEditor : EditorWindow {
         }
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="comparativeState">True = Default. False = para false connections (Comaparative node)</param>
+    private void BeginInteractiveConnectionMode(bool comparativeState = true)
+    {
+        interactiveConnectionModeActive = true;
+        interactiveConnectionOriginNode = _lastRightClickedNode;
+        interactiveConnecitonComparativeState = comparativeState;
+    }
 
     //Se encarga de dibujar los nodos sobre la ventana
     void DrawNodes()
@@ -606,38 +649,23 @@ public class DialogueEditor : EditorWindow {
 		if(_lastRightClickedNode is DialogueNode)
         {
             menu.AddItem(new GUIContent("Add Option"), false, ContextMenuActions, UserActions.addOptionNodeConnected);
-			if (_lastLeftClickedNode is ComparativeNode)
-			{
-				menu.AddItem(new GUIContent("Add Connection as True (with focused node)"), false, ContextMenuActions, UserActions.addConnection);
-				menu.AddItem(new GUIContent("Add Connection as False (with focused node)"), false, ContextMenuActions, UserActions.addConnectionAsFalse);
-			} else
-				menu.AddItem(new GUIContent("Add Connection (with focused node)"), false, ContextMenuActions, UserActions.addConnection);
+				menu.AddItem(new GUIContent("Add Connection"), false, ContextMenuActions, UserActions.addConnection);
 			menu.AddItem(new GUIContent("Delete"), false, ContextMenuActions, UserActions.deleteNode);
         }
         else if (_lastRightClickedNode is OptionNode)
         {
             menu.AddItem(new GUIContent("Add Dialogue"), false, ContextMenuActions, UserActions.addDialogueNodeConnected);
-			if (_lastLeftClickedNode is ComparativeNode)
-			{
-				menu.AddItem(new GUIContent("Add Connection as True (with focused node)"), false, ContextMenuActions, UserActions.addConnection);
-				menu.AddItem(new GUIContent("Add Connection as False (with focused node)"), false, ContextMenuActions, UserActions.addConnectionAsFalse);
-			} else
-				menu.AddItem(new GUIContent("Add Connection (with focused node)"), false, ContextMenuActions, UserActions.addConnection);
+				menu.AddItem(new GUIContent("Add Connection"), false, ContextMenuActions, UserActions.addConnection);
 			menu.AddItem(new GUIContent("Delete"), false, ContextMenuActions, UserActions.deleteNode);
         }
         else if (_lastRightClickedNode is StartNode)
         {
-            menu.AddItem(new GUIContent("Add Connection (with focused node)"), false, ContextMenuActions, UserActions.addConnection);
+            menu.AddItem(new GUIContent("Add Connection"), false, ContextMenuActions, UserActions.addConnection);
             menu.AddItem(new GUIContent("Add Dialogue"), false, ContextMenuActions, UserActions.addDialogueNodeConnected);
         }
         else if (_lastRightClickedNode is EndNode)
         {
-			if (_lastLeftClickedNode is ComparativeNode)
-			{
-				menu.AddItem(new GUIContent("Add Connection as True (with focused node)"), false, ContextMenuActions, UserActions.addConnection);
-				menu.AddItem(new GUIContent("Add Connection as False (with focused node)"), false, ContextMenuActions, UserActions.addConnectionAsFalse);
-			} else
-				menu.AddItem(new GUIContent("Add Connection (with focused node)"), false, ContextMenuActions, UserActions.addConnection);
+				menu.AddItem(new GUIContent("Add Connection"), false, ContextMenuActions, UserActions.addConnection);
             var endqty = 0;
             foreach (var node in _nodes)
             {
@@ -648,34 +676,20 @@ public class DialogueEditor : EditorWindow {
             else menu.AddDisabledItem(new GUIContent("Delete"));
         } else if (_lastRightClickedNode is ComparativeNode)
 		{
-			if (_lastLeftClickedNode is ComparativeNode)
-			{
-				menu.AddItem(new GUIContent("Add Connection as True (with focused node)"), false, ContextMenuActions, UserActions.addConnection);
-				menu.AddItem(new GUIContent("Add Connection as False (with focused node)"), false, ContextMenuActions, UserActions.addConnectionAsFalse);
-			} else
-				menu.AddItem(new GUIContent("Add Connection (with focused node)"), false, ContextMenuActions, UserActions.addConnection);
+			menu.AddItem(new GUIContent("Add Connection for True"), false, ContextMenuActions, UserActions.addConnection);
+			menu.AddItem(new GUIContent("Add Connection for False"), false, ContextMenuActions, UserActions.addConnectionAsFalse);
 			menu.AddItem(new GUIContent("Add Dialogue"), false, ContextMenuActions, UserActions.addDialogueNode);
 			menu.AddItem(new GUIContent("Delete"), false, ContextMenuActions, UserActions.deleteNode);
 		}
         else if (_lastRightClickedNode is FunctionNode)
         {
-			if (_lastLeftClickedNode is ComparativeNode)
-			{
-				menu.AddItem(new GUIContent("Add Connection as True (with focused node)"), false, ContextMenuActions, UserActions.addConnection);
-				menu.AddItem(new GUIContent("Add Connection as False (with focused node)"), false, ContextMenuActions, UserActions.addConnectionAsFalse);
-			} else
-				menu.AddItem(new GUIContent("Add Connection (with focused node)"), false, ContextMenuActions, UserActions.addConnection);
+			menu.AddItem(new GUIContent("Add Connection"), false, ContextMenuActions, UserActions.addConnection);
 			menu.AddItem(new GUIContent("Add Dialogue"), false, ContextMenuActions, UserActions.addDialogueNode);
             menu.AddItem(new GUIContent("Delete"), false, ContextMenuActions, UserActions.deleteNode);
         }
         else if (_lastRightClickedNode is DelayNode)
         {
-			if (_lastLeftClickedNode is ComparativeNode)
-			{
-				menu.AddItem(new GUIContent("Add Connection as True (with focused node)"), false, ContextMenuActions, UserActions.addConnection);
-				menu.AddItem(new GUIContent("Add Connection as False (with focused node)"), false, ContextMenuActions, UserActions.addConnectionAsFalse);
-			} else
-				menu.AddItem(new GUIContent("Add Connection (with focused node)"), false, ContextMenuActions, UserActions.addConnection);
+			menu.AddItem(new GUIContent("Add Connection"), false, ContextMenuActions, UserActions.addConnection);
 			menu.AddItem(new GUIContent("Add Dialogue"), false, ContextMenuActions, UserActions.addDialogueNode);
             menu.AddItem(new GUIContent("Delete"), false, ContextMenuActions, UserActions.deleteNode);
         }
@@ -718,7 +732,8 @@ public class DialogueEditor : EditorWindow {
                 AddNode<DelayNode>(new Rect(_mousePosition.x, _mousePosition.y, 100, 100), GetNewId());
                 break;
             case UserActions.addConnection:
-                AddConnection();
+                BeginInteractiveConnectionMode();
+                //AddConnection();
                 break;
             case UserActions.deleteNode:
                 DeleteNode();
@@ -727,7 +742,8 @@ public class DialogueEditor : EditorWindow {
 				AddNode<ComparativeNode>(new Rect(_mousePosition.x, _mousePosition.y, 180, 100), GetNewId());
 				break;
 			case UserActions.addConnectionAsFalse:
-				AddFalseConnection();
+                BeginInteractiveConnectionMode(false);
+                //AddFalseConnection();
 				break;
 
             case UserActions.resetScroll:
@@ -782,7 +798,34 @@ public class DialogueEditor : EditorWindow {
         }   
     }
 
-	public void AddFalseConnection() {
+    public void AddConnection(BaseNode origin, BaseNode target)
+    {
+        if (target == null || origin == null) return;
+
+        /* Ya que hay nodos que no pueden tener ciertos tipos de padre (el nodo respuesta no puede 
+         * tener otro nodo respuesta como padre) chequeo que la conexión que se intente hacer sea válida */
+
+        #region Checkeo legacy, para referencia
+        //if ((origin is StartNode && target is DialogueNode)
+        //          || (origin is DialogueNode && target is OptionNode)
+        //          || (origin is OptionNode && target is DialogueNode)
+        //          || (origin is EndNode && target is OptionNode)
+        //	|| (origin is ComparativeNode && target is OptionNode))
+
+        #endregion
+        if (origin.CanTransitionTo(target))
+        {
+            /* Si la conexión es válida seteo al ultimo nodo en el cual se hizo click 
+             * izquierdo como el padre del ultimo nodo en el que se hizo click derecho */
+            target.SetParent(origin);
+            if (origin is INeedsChildren)
+            {
+                ((INeedsChildren)origin).AssignChild(target, 0);
+            }
+        }
+    }
+
+    public void AddFalseConnection() {
 		if (_lastRightClickedNode == null || _lastLeftClickedNode == null) return;
 
 		if (_lastLeftClickedNode.CanTransitionTo(_lastRightClickedNode))
@@ -796,6 +839,22 @@ public class DialogueEditor : EditorWindow {
 			}
 		}
 	}
+
+    public void AddFalseConnection(BaseNode origin, BaseNode target)
+    {
+        if (target == null || origin == null) return;
+
+        if (origin.CanTransitionTo(target))
+        {
+            /* Si la conexión es válida seteo al ultimo nodo en el cual se hizo click 
+             * izquierdo como el padre del ultimo nodo en el que se hizo click derecho */
+            target.SetParent(origin);
+            if (origin is INeedsChildren)
+            {
+                ((INeedsChildren)origin).AssignChild(target, 1);
+            }
+        }
+    }
 
     public bool NodeExists(BaseNode node)
     {

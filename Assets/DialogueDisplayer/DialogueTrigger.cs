@@ -17,7 +17,7 @@ public class DialogueTrigger : MonoBehaviour {
 
     public void TriggerDialogue()
     {
-        DialogueManager.instance.StartDialogue(NPC_Name, face, db);
+        DialogueDisplayer.instance.StartDialogue(NPC_Name, face, db);
     }
 
 }
