@@ -11,7 +11,73 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf7da5580a288c740aa183663abb9b21, type: 3}
   m_Name: Test
   m_EditorClassIdentifier: 
-  nodes: []
+  nodes:
+  - id: 7646
+    parentIds: 
+    windowRect:
+      serializedVersion: 2
+      x: 300
+      y: 400
+      width: 100
+      height: 100
+    windowTitle: Start
+    data: 
+    nodeType: Start
+  - id: 7281
+    parentIds: 
+    windowRect:
+      serializedVersion: 2
+      x: 481
+      y: 387
+      width: 100
+      height: 100
+    windowTitle: End
+    data: 
+    nodeType: End
+  - id: 8743
+    parentIds: de1d0000
+    windowRect:
+      serializedVersion: 2
+      x: 430
+      y: 126
+      width: 200
+      height: 130
+    windowTitle: Dialogue
+    data: Primer dialogo
+    nodeType: Dialogue
+  - id: 3343
+    parentIds: 27220000
+    windowRect:
+      serializedVersion: 2
+      x: 718
+      y: 158
+      width: 200
+      height: 130
+    windowTitle: Option
+    data: Primera opcion
+    nodeType: Option
+  - id: 776
+    parentIds: 0f0d0000
+    windowRect:
+      serializedVersion: 2
+      x: 1018
+      y: 381
+      width: 200
+      height: 130
+    windowTitle: Dialogue
+    data: 1
+    nodeType: Dialogue
+  - id: 8635
+    parentIds: 0f0d0000
+    windowRect:
+      serializedVersion: 2
+      x: 904
+      y: 546
+      width: 200
+      height: 130
+    windowTitle: Dialogue
+    data: 3
+    nodeType: Dialogue
   parameters:
     intNames: []
     intValues: 

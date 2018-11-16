@@ -7,6 +7,7 @@ public class DialogueDisplayer : MonoBehaviour {
 
     public static DialogueDisplayer instance;
 
+    public Canvas canvas;
     public Text nameText;
     public Image characterImage;
     public Text dialogueText;
@@ -18,28 +19,30 @@ public class DialogueDisplayer : MonoBehaviour {
     private DialogueBehavior db;
     private DialogueObject current;
     private Dictionary<int, int> currentOptionsIds;
+    public bool isWorldSpaceDialogue = false;
 
     void Start () {
+        if (!isWorldSpaceDialogue) EnforceSingleton();
+        else canvas.enabled = false;
+        currentOptionsIds = new Dictionary<int, int>();
+        availableOptionSlots = optionsText.Length;
+    }
 
+    private void EnforceSingleton()
+    {
         if (instance == null) instance = this;
         else if (instance != this)
             Destroy(gameObject);
-
-        //new stuff below
-        currentOptionsIds = new Dictionary<int, int>();
-
-        availableOptionSlots = optionsText.Length;
-
-
     }
 
     public void StartDialogue(string name, Sprite face, DialogueBehavior db)
     {
+        if (isWorldSpaceDialogue) canvas.enabled = true;
         animator.SetBool("isOpen", true);
         SetFace(face);
         nameText.text = name;
         this.db = db;
-
+        ClearOptions();
         PrintDialogue(db.GetStartingDialogue());
     }
 
@@ -75,6 +78,7 @@ public class DialogueDisplayer : MonoBehaviour {
 
     public void EndDialogue()
     {
+        if (isWorldSpaceDialogue) canvas.enabled = false;
         animator.SetBool("isOpen", false);
         Debug.Log("Ending Conversation");
     }
@@ -94,7 +98,7 @@ public class DialogueDisplayer : MonoBehaviour {
         current = dialogue;
 
         var dialogueString = current.dialogue + " \n";
-
+        ClearOptions();
         var contador = 0;
         foreach (var option in current.options)
         {

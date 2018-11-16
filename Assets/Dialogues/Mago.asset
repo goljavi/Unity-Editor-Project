@@ -11,4 +11,55 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf7da5580a288c740aa183663abb9b21, type: 3}
   m_Name: Mago
   m_EditorClassIdentifier: 
-  nodes: []
+  nodes:
+  - id: 4800
+    parentIds: 
+    windowRect:
+      serializedVersion: 2
+      x: 300
+      y: 400
+      width: 100
+      height: 100
+    windowTitle: Start
+    data: 
+    nodeType: Start
+  - id: 8359
+    parentIds: 221b0000
+    windowRect:
+      serializedVersion: 2
+      x: 600
+      y: 400
+      width: 100
+      height: 100
+    windowTitle: End
+    data: 
+    nodeType: End
+  - id: 9636
+    parentIds: c0120000
+    windowRect:
+      serializedVersion: 2
+      x: 390
+      y: 189
+      width: 200
+      height: 130
+    windowTitle: Dialogue
+    data: Hola, soy un mago!
+    nodeType: Dialogue
+  - id: 6946
+    parentIds: a4250000
+    windowRect:
+      serializedVersion: 2
+      x: 663
+      y: 203
+      width: 200
+      height: 130
+    windowTitle: Option
+    data: Okay
+    nodeType: Option
+  parameters:
+    intNames: []
+    intValues: 
+    floatNames: []
+    floatValues: []
+    boolNames: []
+    boolValues: 
